@@ -287,17 +287,15 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
                 app.StatusLabel.FontColor = [0.8 0 0];
                 
             catch ME
-                warning('启动初始化失败: %s', ME.message);
+                warning('启动初始化失败:', '%s', ME.message);
             end
         end
-       
+        
         function cleanup(app)
             try
                 % 清理任何打开的TCP连接
-                tcpClients = instrfind('Type', 'tcpip');
-                if ~isempty(tcpClients)
-                    fclose(tcpClients);
-                    delete(tcpClients);
+                if isfield(app, 'tcpClient') && isvalid(app.tcpClient)
+                    clear app.tcpClient;
                 end
             catch
                 % 忽略清理错误
