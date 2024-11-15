@@ -133,7 +133,7 @@ git push origin v1.1
 
 ## 系统要求
 
-MATLAB R2020a 或更高版本
+MATLAB R2024a 或更高版本
 
 建议屏幕分辨率：1200x800 或更高
 
