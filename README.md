@@ -50,13 +50,14 @@
 
 ### 版本发布
 
-    ```bash
-    # 标记新版本
-    git tag -a v1.1 -m "版本1.1发布"
+```bash
+# 标记新版本
+git tag -a v1.1 -m "版本1.1发布"
 
-    # 推送标签
-    git push origin v1.1
-    ```
+# 推送标签
+git push origin v1.1
+```
+
 ### 常见问题
 1. 如遇到TCP连接失败：
 
