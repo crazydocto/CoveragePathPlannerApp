@@ -287,7 +287,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
                 app.StatusLabel.FontColor = [0.8 0 0];
                 
             catch ME
-                warning('启动初始化失败:', '%s', ME.message);
+                warning(ME.identifier, '启动初始化失败: %s', ME.message);
             end
         end
         
