@@ -19,8 +19,9 @@ function exportWaypoints(app)
                     msgbox(sprintf('路径点已成功导出到:\n%s', fullPath), '导出成功');
                 catch saveErr
                     app.StatusLabel.Text = '保存文件失败！';
-                    app.StatusLabel.FontColor = [0 0.5 0];
+                    app.StatusLabel.FontColor = [0.8 0 0];
                     errordlg(sprintf('保存文件失败:\n%s', saveErr.message), '保存错误');
+                    return;
                 end
             end
         catch ME
@@ -29,6 +30,6 @@ function exportWaypoints(app)
     else
         app.StatusLabel.Text = '没有可导出的路径点数据！';
         app.StatusLabel.FontColor = [0.8 0 0];
-        warndlg('没有可导出的路径点数据！', '警告');
+        return;
     end
 end

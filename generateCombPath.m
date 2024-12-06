@@ -1,4 +1,4 @@
-function waypoints = generateCombPath(startPoint, lineSpacing, pathWidth, numLines, direction)
+function waypoints = generateCombPath(app, startPoint, lineSpacing, pathWidth, numLines, direction)
     % 初始化waypoints数组
     totalPoints = numLines * 2;  % 每条线有起点和终点
     waypoints = zeros(totalPoints, 2);
@@ -35,4 +35,15 @@ function waypoints = generateCombPath(startPoint, lineSpacing, pathWidth, numLin
             end
         end
     end
+    
+    % 计算路径总长度
+    totalLength = 0;
+    for i = 1:size(waypoints,1)-1
+        totalLength = totalLength + norm(waypoints(i+1,:) - waypoints(i,:));
+    end
+    
+    % 更新状态（修改这里，使用正确的属性名）
+    app.TotalLengthLabelandTCP.Text = sprintf('总路径长度: %.1f 米', totalLength);
+    app.StatusLabel.Text = '已生成规划路径数据！';
+    app.StatusLabel.FontColor = [0 0.5 0];
 end

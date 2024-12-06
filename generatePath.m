@@ -12,7 +12,7 @@ function generatePath(app)
         cla(app.UIAxes);
         
         % 生成路径
-        app.Waypoints = generateCombPath(startPoint, lineSpacing, pathWidth, numLines, direction);
+        app.Waypoints = generateCombPath(app, startPoint, lineSpacing, pathWidth, numLines, direction);
         
         % 将路径点保存到基础工作区
         assignin('base', 'Waypoints', app.Waypoints);
@@ -37,7 +37,7 @@ function generatePath(app)
         end
         
         % 更新总长度标签
-        app.TotalLengthLabel.Text = sprintf('总路径长度: %.1f 米', totalLength);
+        app.TotalLengthLabelandTCP.Text = sprintf('总路径长度: %.1f 米', totalLength);
         
         % 设置图形属性
         grid(app.UIAxes, 'on');

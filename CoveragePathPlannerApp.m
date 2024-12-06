@@ -52,7 +52,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
         GenerateButton          matlab.ui.control.Button
         SendTCPButton          matlab.ui.control.Button % 新增TCP发送按钮
         UIAxes                  matlab.ui.control.UIAxes
-        TotalLengthLabel       matlab.ui.control.Label
+        TotalLengthLabelandTCP  matlab.ui.control.Label
         StatusLabel            matlab.ui.control.Label % 新增状态显示标签
         ExportButton           matlab.ui.control.Button
         Waypoints
@@ -63,7 +63,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             % 主窗口设置
             app.UIFigure = uifigure;
             app.UIFigure.Position = [100 100 1200 800];
-            app.UIFigure.Name = 'AUV全覆盖梳状路径拐点生成器1.1（单位：m）';
+            app.UIFigure.Name = 'AUV全覆盖梳状路径拐点生成器1.1(单位:m)';
             
             % 1. 坐标初始化面板
             app.InitPanel = uipanel(app.UIFigure);
@@ -247,10 +247,10 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.SendTCPButton.Enable = 'off';
 
             % 总路径长度
-            app.TotalLengthLabel = uilabel(app.UIFigure);
-            app.TotalLengthLabel.Position = [30 40 320 22];
-            app.TotalLengthLabel.Text = '总路径长度: 0.0 米';
-            app.TotalLengthLabel.HorizontalAlignment = 'center';
+            app.TotalLengthLabelandTCP = uilabel(app.UIFigure);
+            app.TotalLengthLabelandTCP.Position = [30 40 320 22];
+            app.TotalLengthLabelandTCP.Text = '总路径长度: 0.0 米';
+            app.TotalLengthLabelandTCP.HorizontalAlignment = 'center';
             
             % 状态标签
             app.StatusLabel = uilabel(app.UIFigure);
