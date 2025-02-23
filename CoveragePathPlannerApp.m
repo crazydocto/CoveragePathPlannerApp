@@ -350,14 +350,14 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.GenerateButton = uibutton(app.UIFigure, 'push');
             app.GenerateButton.ButtonPushedFcn = @(~,~) exportlocal(app);
             app.GenerateButton.Position = [440 420 320 30];
-            app.GenerateButton.Text = '导出 Dubins 路径规划路径点(csv格式)';
+            app.GenerateButton.Text = '导出 Dubins 路径点(csv格式)';
             app.GenerateButton.Enable = 'off';
             
             % 添加一个按钮来发送局部路径规划数据到AUV
             app.SendLocalTCPButton = uibutton(app.UIFigure, 'push');
             app.SendLocalTCPButton.ButtonPushedFcn = @(~,~) sendDubinsTCPData(app);
             app.SendLocalTCPButton.Position = [440 460 320 30];
-            app.SendLocalTCPButton.Text = '发送 Dubins 路径规划数据到AUV';
+            app.SendLocalTCPButton.Text = '发送 Dubins 路径数据至AUV';
             app.SendLocalTCPButton.Enable = 'off';
             
             % 添加一个按钮来导入格式为.mat的地图数据
@@ -375,13 +375,13 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.ExportButton = uibutton(app.UIFigure, 'push');
             app.ExportButton.ButtonPushedFcn = @(~,~) exportWaypoints(app);
             app.ExportButton.Position = [30 110 320 30];
-            app.ExportButton.Text = '导出梳状路径路径点(csv格式)';
+            app.ExportButton.Text = '导出梳状路径点(csv格式)';
             app.ExportButton.Enable = 'off';
             
             app.SendTCPButton = uibutton(app.UIFigure, 'push');
             app.SendTCPButton.ButtonPushedFcn = @(~,~) sendTCPData(app);
             app.SendTCPButton.Position = [30 70 320 30];
-            app.SendTCPButton.Text = '发送梳状路径数据到AUV';
+            app.SendTCPButton.Text = '发送梳状路径数据至AUV';
             app.SendTCPButton.Enable = 'off';
 
             % 总路径长度
