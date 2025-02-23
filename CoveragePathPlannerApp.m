@@ -2,7 +2,7 @@
 %
 % 功能描述：
 %   生成 AUV 海底探测梳状全覆盖路径拐点，并支持导出为.csv/.mat格式文件。
-%   同时，新增了 dubins 路径规划避障算法相关设置，以及 TCP 设置和数据发送功能。
+%   同时，新增了 Dubins 路径规划避障算法相关设置，以及 TCP 设置和数据发送功能。
 %
 % 作者信息：
 %   作者：Chihong（游子昂）
@@ -20,7 +20,7 @@
 % 版本历史：
 %   v1.0 (20241001) - 初始版本，实现基本的路径拐点生成功能
 %   v1.1 (20241101) - TCP 设置和数据发送功能
-%   v1.2 (20250110) - 新增 dubins 路径规划避障算法设置，相应的TCP 设置和数据发送功能
+%   v1.2 (20250110) - 新增 Dubins 路径规划避障算法设置，相应的TCP 设置和数据发送功能
 %
 % 输入参数：
 %   无直接输入参数，通过 GUI 界面设置相关参数
@@ -29,7 +29,7 @@
 %   无直接返回值，生成的路径拐点数据可导出为.csv/.mat格式文件
 %
 % 注意事项：
-%   1. 在使用 dubins 路径规划避障算法前，请确保相关参数设置正确。
+%   1. 在使用 Dubins 路径规划避障算法前，请确保相关参数设置正确。
 %   2. TCP 发送功能需要确保服务器 IP 和端口设置正确，且 AUV 设备已连接。
 %   3. 导出路径点文件时，请选择合适的保存路径和文件格式。
 %
@@ -40,7 +40,7 @@
 %   - MATLAB 自带的 GUI 组件和绘图工具箱
 %
 % 参见函数：
-%   planUAVPaths, drawPaths, obstaclemarking, exportlocal, sendLocalTCPData, importMapData, generatePath, exportWaypoints, sendTCPData
+%   planAUVPaths, drawPaths, obstacleMarking, exportlocal, sendDubinsTCPData, importMapData, generatePath, exportWaypoints, sendTCPData
 
 
 classdef CoveragePathPlannerApp < matlab.apps.AppBase
@@ -113,7 +113,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
         
         PlanPathsButton          matlab.ui.control.Button
 %         drawPathsButton             matlab.ui.control.Button
-        obstaclemarkingButton             matlab.ui.control.Button
+        obstacleMarkingButton             matlab.ui.control.Button
         ExportLocalButton          matlab.ui.control.Button
         SendLocalTCPButton       matlab.ui.control.Button
         ImportButton       matlab.ui.control.Button
@@ -334,37 +334,30 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
 
             % 添加一个按钮来启动路径规划
             app.PlanPathsButton = uibutton(app.UIFigure, 'push');
-            app.PlanPathsButton.ButtonPushedFcn = @(~,~) planUAVPaths(app, app.NumLinesEditField.Value,app.dubinsnsEditField.Value,app.dubinsnlEditField.Value,app.dubinsnfEditField.Value);
+            app.PlanPathsButton.ButtonPushedFcn = @(~,~) planAUVPaths(app, app.NumLinesEditField.Value,app.dubinsnsEditField.Value,app.dubinsnlEditField.Value,app.dubinsnfEditField.Value);
             app.PlanPathsButton.Position = [440 500 320 30];
-            app.PlanPathsButton.Text = 'dubins路径规划';
+            app.PlanPathsButton.Text = 'Dubins 路径规划';
             app.PlanPathsButton.Enable = 'off';
             
-%             % 添加一个按钮来画路径规划图
-%             app.drawPathsButton = uibutton(app.UIFigure, 'push');
-%             app.drawPathsButton.ButtonPushedFcn = @(~,~) drawPaths(app);
-%             app.drawPathsButton.Position = [30 150 320 30];
-%             app.drawPathsButton.Text = '局部路径规划示意图';
-%             app.drawPathsButton.Enable = 'off';
-            
             % 添加一个按钮来画地形图
-            app.obstaclemarkingButton = uibutton(app.UIFigure, 'push');
-            app.obstaclemarkingButton.ButtonPushedFcn = @(~,~)obstaclemarking(app);
-            app.obstaclemarkingButton.Position = [440 540 320 30];
-            app.obstaclemarkingButton.Text = '地形图及障碍物标注';
-            app.obstaclemarkingButton.Enable = 'off';
+            app.obstacleMarkingButton = uibutton(app.UIFigure, 'push');
+            app.obstacleMarkingButton.ButtonPushedFcn = @(~,~) obstacleMarking(app);
+            app.obstacleMarkingButton.Position = [440 540 320 30];
+            app.obstacleMarkingButton.Text = '地形图及障碍物标注';
+            app.obstacleMarkingButton.Enable = 'off';
             
             % 添加一个按钮来导出局部路径规划
             app.GenerateButton = uibutton(app.UIFigure, 'push');
             app.GenerateButton.ButtonPushedFcn = @(~,~) exportlocal(app);
             app.GenerateButton.Position = [440 420 320 30];
-            app.GenerateButton.Text = '导出dubins路径规划路径点(csv格式)';
+            app.GenerateButton.Text = '导出 Dubins 路径规划路径点(csv格式)';
             app.GenerateButton.Enable = 'off';
             
             % 添加一个按钮来发送局部路径规划数据到AUV
             app.SendLocalTCPButton = uibutton(app.UIFigure, 'push');
-            app.SendLocalTCPButton.ButtonPushedFcn = @(~,~) sendLocalTCPData(app);
+            app.SendLocalTCPButton.ButtonPushedFcn = @(~,~) sendDubinsTCPData(app);
             app.SendLocalTCPButton.Position = [440 460 320 30];
-            app.SendLocalTCPButton.Text = '发送dubins路径规划数据到AUV';
+            app.SendLocalTCPButton.Text = '发送 Dubins 路径规划数据到AUV';
             app.SendLocalTCPButton.Enable = 'off';
             
             % 添加一个按钮来导入格式为.mat的地图数据
@@ -407,7 +400,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             % 绘图区域
             app.UIAxes2 = uiaxes(app.UIFigure);
             app.UIAxes2.Position = [800 20 390 390];
-            title(app.UIAxes2, 'dubins路径规划效果图');
+            title(app.UIAxes2, 'Dubins 路径规划效果图');
             xlabel(app.UIAxes2, 'X轴 (米)');
             ylabel(app.UIAxes2, 'Y轴 (米)');
             grid(app.UIAxes2, 'on');

@@ -154,6 +154,8 @@ git push origin v1.1
 
 ### 预计更新内容
 
+- 优化梳状路径点与Dubins模块的数据衔接
+  
 ## 系统要求
 
 MATLAB R2024a 或更高版本

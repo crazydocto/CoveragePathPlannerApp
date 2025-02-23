@@ -1,29 +1,30 @@
+%% generatePath - 生成AUV梳状覆盖路径
+%
+% 功能描述：
+%   从GUI中收集参数，并调用路径生成函数生成AUV的梳状覆盖路径。
+%   生成的路径将在UI界面中显示，并计算总路径长度。
+%
+% 输入参数：
+%   app - AUVCoveragePathPlannerApp的实例
+%
+% 注意事项：
+%   1. 确保所有输入参数有效且格式正确。
+%   2. 该函数会更新UI界面中的按钮状态和标签。
+%
+% 版本信息：
+%   当前版本：v1.1
+%   创建日期：241101
+%   最后修改：250110
+%
+% 作者信息：
+%   作者：Chihong（游子昂）
+%   邮箱：you.ziang@hrbeu.edu.cn
+%   作者：董星犴
+%   邮箱：1443123118@qq.com
+%   单位：哈尔滨工程大学
+
 function generatePath(app)
     % 生成路径
-    %
-    % 功能描述：
-    %   此函数用于从GUI中收集参数，并调用路径生成函数生成AUV的梳状覆盖路径。
-    %   生成的路径将在UI界面中显示，并计算总路径长度。
-    %
-    % 输入参数：
-    %   app - AUVCoveragePathPlannerApp的实例
-    %
-    % 输出参数：
-    %   无直接输出，结果通过UI界面显示
-    %
-    % 注意事项：
-    %   1. 确保所有输入参数有效且格式正确。
-    %   2. 该函数会更新UI界面中的按钮状态和标签。
-    %
-    % 版本信息：
-    %   版本：v1.1
-    %   创建日期：241101
-    %   最后修改：250110
-    %
-    % 作者信息：
-    %   作者：游子昂
-    %   邮箱：you.ziang@hrbeu.edu.cn
-    %   单位：哈尔滨工程大学
     startPoint = [app.XEditField.Value, app.YEditField.Value];
     lineSpacing = app.LineSpacingEditField.Value;
     pathWidth = app.PathWidthEditField.Value;
@@ -76,9 +77,10 @@ function generatePath(app)
         % 启用导出按钮和TCP发送按钮
         app.ExportButton.Enable = 'on';
         app.SendTCPButton.Enable = 'on';
+        app.PlanPathsButton.Enable = 'on';
         
     catch ME
         % 错误处理
         errordlg(['路径生成错误: ' ME.message], '错误');
-    end
+    end 
 end

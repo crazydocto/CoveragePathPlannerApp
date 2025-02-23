@@ -1,28 +1,62 @@
-    % 导出路径点
-    %
-    % 功能描述：
-    %   此函数用于将生成的路径点导出为CSV文件。如果路径点数组不为空，
-    %   则创建一个表格并保存到用户指定的文件中。
-    %
-    % 输入参数：
-    %   app - AUVCoveragePathPlannerApp的实例
-    %
-    % 输出参数：
-    %   无直接输出，结果通过UI界面显示
-    %
-    % 注意事项：
-    %   1. 确保路径点数组不为空。
-    %   2. 该函数会更新UI界面中的状态标签。
-    %
-    % 版本信息：
-    %   版本：v1.1
-    %   创建日期：241101
-    %   最后修改：250110
-    %
-    % 作者信息：
-    %   作者：游子昂
-    %   邮箱：you.ziang@hrbeu.edu.cn
-    %   单位：哈尔滨工程大学
+%% exportWaypoints - AUV路径点数据导出工具
+%
+% 功能描述：
+%   将生成的AUV路径点数据导出为CSV格式文件，支持数值型和单元格型数据的
+%   导出，包含坐标、航向角和转弯半径信息。通过图形界面交互实现文件保存。
+%
+% 作者信息：
+%   作者：Chihong（游子昂）
+%   邮箱：you.ziang@hrbeu.edu.cn
+%   单位：哈尔滨工程大学
+%
+% 版本信息：
+%   当前版本：v1.1
+%   创建日期：241101
+%   最后修改：250110
+%
+% 版本历史：
+%   v1.1 (250110)
+%       + 增加数据类型自动检测
+%       + 添加默认保存路径处理
+%       + 优化错误处理机制
+%   v1.0 (241101)
+%       + 首次发布
+%       + 实现基础路径点导出
+%       + 添加用户界面交互
+%
+% 输入参数：
+%   app - [object] AUVCoveragePathPlannerApp实例
+%         必选参数，包含以下关键属性：
+%         - Waypoints: [nx4 double] 路径点数据
+%           [X坐标, Y坐标, 航向角theta, 转弯半径r]
+%         - StatusLabel: [UILabel] 状态显示标签
+%
+% 输出参数：
+%   无直接返回值，结果通过以下方式输出：
+%   1. CSV文件：保存路径点数据
+%   2. UI反馈：状态标签更新
+%   3. 消息框：操作结果提示
+%
+% 注意事项：
+%   1. 数据格式：路径点必须为nx4矩阵
+%   2. 存储路径：默认在guiFile目录下
+%   3. 文件命名：默认为CSV_waypoints.csv
+%   4. 权限要求：需要写入权限
+%
+% 调用示例：
+%   % 在APP中调用导出功能
+%   app = AUVCoveragePathPlannerApp;
+%   app.Waypoints = [0,0,0,5; 10,0,0,5; 10,10,pi/2,5];
+%   exportWaypoints(app);
+%
+% 依赖函数：
+%   - writematrix
+%   - writecell
+%   - writetable
+%   - array2table
+%
+% 参见函数：
+%   importWaypoints, generateCombPath
 
 function exportWaypoints(app)
     if ~isempty(app.Waypoints)
@@ -85,5 +119,4 @@ function exportWaypoints(app)
         app.StatusLabel.FontColor = [0.8 0 0];
         return;
     end
-    app.PlanPathsButton.Enable = 'on';
 end

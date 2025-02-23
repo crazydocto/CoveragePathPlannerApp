@@ -1,31 +1,24 @@
-function sendLocalTCPData(app)
-    % 发送局部路径规划数据到AUV
-    %
-    % 功能描述：
-    %   根据设置的服务器IP和端口，将局部路径规划数据发送到AUV设备。
-    %
-    % 输入参数：
-    %   app - AUVCoveragePathPlannerApp实例
-    %
-    % 输出参数：
-    %   无直接返回值，发送结果通过UI界面显示
-    %
-    % 注意事项：
-    %   1. 请确保服务器IP和端口设置正确，且AUV设备已连接。
-    %   2. 发送过程中，按钮将被禁用，发送完成后恢复可用状态。
-    %   3. 本函数读取本地CSV文件，文件名固定为'result_no_duplicates.csv'。
-    %
-    % 版本信息：
-    %   当前版本：v1.1
-    %   创建日期：20241101
-    %   最后修改：20241101
-    %
-    % 作者信息：
-    %   作者：董星犴
-    %   邮箱：1443123118@qq.com
-    %   单位：哈尔滨工程大学
+%% sendDubinsTCPData - 发送局部路径规划数据到AUV
+%
+% 功能描述：
+%   根据设置的服务器IP和端口，将局部路径规划数据发送到AUV设备。
+%
+% 输入参数：
+%   app - AUVCoveragePathPlannerApp的实例
+%
+% 版本信息：
+%   当前版本：v1.1
+%   创建日期：241101
+%   最后修改：250110
+%
+% 作者信息：
+%   作者：Chihong（游子昂）
+%   邮箱：you.ziang@hrbeu.edu.cn
+%   作者：董星犴
+%   邮箱：1443123118@qq.com
+%   单位：哈尔滨工程大学
 
-
+function sendDubinsTCPData(app)
 
     % 获取TCP设置
     serverIP = app.ServerIPEditField.Value;
@@ -63,28 +56,18 @@ function sendLocalTCPData(app)
         return;
     end
 
-    % 读取 CSV 文件内容
-    try
-        waypoints = readmatrix('result_no_duplicates.csv');
-    catch readErr
-        app.TotalLengthLabelandTCP.Text = ['读取CSV文件失败: %s', readErr.message];
-        app.TotalLengthLabelandTCP.FontColor = [0.8 0 0];
-        app.SendTCPButton.Enable = true;
-        return;
-    end
-
     % 获取初始位置和姿态角
     try
         P0 = [app.P0XEditField.Value, app.P0YEditField.Value, app.P0ZEditField.Value];
         A0 = [app.A0XEditField.Value, app.A0YEditField.Value, app.A0ZEditField.Value];
         
         % 获取Waypoints和添加Z坐标列
-        WPNum = size(waypoints, 1);
+        WPNum = size(result_no_duplicates, 1);
         zero_column = zeros(WPNum, 1);
-        waypoints = [waypoints, zero_column];
+        result_no_duplicates = [result_no_duplicates, zero_column];
         
         % 创建数据结构
-        dataStruct = struct('Waypoints', waypoints, ...
+        dataStruct = struct('Waypoints', result_no_duplicates, ...
                             'WPNum', WPNum, ...
                             'P0', P0, ...
                             'A0', A0);

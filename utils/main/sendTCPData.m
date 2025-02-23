@@ -1,30 +1,30 @@
+% 发送TCP数据到AUV设备
+%
+% 功能描述：
+%   此函数用于将规划路径数据通过TCP连接发送到AUV设备。
+%   它首先检查TCP设置，尝试建立连接，然后发送数据。
+%
+% 输入参数：
+%   app - AUVCoveragePathPlannerApp的实例，包含UI组件和路径数据
+%
+% 输出参数：
+%   无直接输出，发送结果会在UI界面中显示
+%
+% 注意事项：
+%   1. 确保服务器IP和端口正确，且AUV设备已开启并准备好接收数据。
+%   2. 发送过程中，相关按钮将被禁用，发送完成后恢复可用状态。
+%
+% 版本信息：
+%   版本：v1.1
+%   创建日期：241101
+%   最后修改：250110
+%
+% 作者信息：
+%   作者：游子昂
+%   邮箱：you.ziang@hrbeu.edu.cn
+%   单位：哈尔滨工程大学
+
 function sendTCPData(app)
-    % 发送TCP数据到AUV设备
-    %
-    % 功能描述：
-    %   此函数用于将规划路径数据通过TCP连接发送到AUV设备。
-    %   它首先检查TCP设置，尝试建立连接，然后发送数据。
-    %
-    % 输入参数：
-    %   app - AUVCoveragePathPlannerApp的实例，包含UI组件和路径数据
-    %
-    % 输出参数：
-    %   无直接输出，发送结果会在UI界面中显示
-    %
-    % 注意事项：
-    %   1. 确保服务器IP和端口正确，且AUV设备已开启并准备好接收数据。
-    %   2. 发送过程中，相关按钮将被禁用，发送完成后恢复可用状态。
-    %
-    % 版本信息：
-    %   版本：v1.1
-    %   创建日期：241101
-    %   最后修改：250110
-    %
-    % 作者信息：
-    %   作者：游子昂
-    %   邮箱：you.ziang@hrbeu.edu.cn
-    %   单位：哈尔滨工程大学
- 
     % 获取TCP设置
     serverIP = app.ServerIPEditField.Value;
     port = app.PortEditField.Value;
@@ -36,16 +36,6 @@ function sendTCPData(app)
         return;
     end
 
-    % % 创建TCP客户端配置
-    % try
-    %     client = tcpclient(serverIP, port);
-    %     app.TotalLengthLabelandTCP.Text = ('TCP连接成功');
-    %     app.TotalLengthLabelandTCP.FontColor = [0 0.5 0];
-    % catch tcpErr
-    %     app.TotalLengthLabelandTCP.Text = ['TCP连接失败: %s\n请检查IP地址和端口设置', tcpErr.message];
-    %     app.TotalLengthLabelandTCP.FontColor  = [0.8 0 0];
-    %     return;
-    % end 
     % 创建TCP客户端配置
     try
         % 显示连接中状态
