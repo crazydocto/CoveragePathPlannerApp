@@ -39,7 +39,7 @@
 %
 % 注意事项：
 %   1. 数据格式：路径点必须为nx4矩阵
-%   2. 存储路径：默认在guiFile目录下
+%   2. 存储路径：默认在data目录下
 %   3. 文件命名：默认为CSV_waypoints.csv
 %   4. 权限要求：需要写入权限
 %
@@ -80,11 +80,11 @@ function exportWaypoints(app)
             end
             
             % 生成目标文件路径
-            defaultPath = fullfile(pwd, 'guiFile', 'CSV_waypoints.csv');
+            defaultPath = fullfile(pwd, 'data', 'CSV_waypoints.csv');
             
             % 确保目标文件夹存在，如果不存在则创建
-            if ~exist(fullfile(pwd, 'guiFile'), 'dir')
-                mkdir(fullfile(pwd, 'guiFile'));
+            if ~exist(fullfile(pwd, 'data'), 'dir')
+                mkdir(fullfile(pwd, 'data'));
             end
             
             % 调用保存函数
