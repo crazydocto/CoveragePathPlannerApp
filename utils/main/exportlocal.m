@@ -52,25 +52,48 @@
 
 % 函数实现部分
 function exportlocal(app)
-    % 读取 CSV 文件内容
-    data = readmatrix('result_no_duplicates.csv');
-
-    % 获取保存文件名
-    [filename, pathname] = uiputfile({'*.csv', 'CSV文件 (*.csv)'}, '保存 CSV 文件', 'exported_data.csv');
-    
-    if isequal(filename, 0) || isequal(pathname, 0)
-        % 用户取消操作
-        return;
-    end
-
-    % 完整路径
-    fullPath = fullfile(pathname, filename);
-
-    % 保存数据到 CSV 文件
     try
-        writetable(array2table(data), fullPath);
-        msgbox(['数据已成功导出到: ' fullPath], '导出成功');
+        % 从工作区读取数据
+        result_no_duplicates = evalin('base', 'result_no_duplicates');
+        
+        % 设置默认保存路径为 app.currentFolderPath/data
+        defaultPath = fullfile(app.currentFolderPath, 'data');
+        
+        % 如果目录不存在则创建
+        if ~exist(defaultPath, 'dir')
+            mkdir(defaultPath);
+        end
+        
+        % 设置默认文件名
+        defaultFileName = fullfile(defaultPath, 'CSV_Dubins_waypoints.csv');
+        
+        % 获取保存文件名
+        [filename, pathname] = uiputfile({'*.csv', 'CSV文件 (*.csv)'}, ...
+            '保存 CSV 文件', defaultFileName);
+        
+        if isequal(filename, 0) || isequal(pathname, 0)
+            % 用户取消操作
+            app.StatusLabel.Text = '导出操作已取消';
+            return;
+        end
+
+        % 完整路径
+        fullPath = fullfile(pathname, filename);
+
+        % 创建表头
+        columnNames = {'X', 'Y'};
+        
+        % 转换为表格并设置表头
+        resultTable = array2table(result_no_duplicates, 'VariableNames', columnNames);
+
+        % 保存数据到 CSV 文件
+        writetable(resultTable, fullPath);
+        app.StatusLabel.Text = '数据导出成功！';
+        app.StatusLabel.FontColor = [0 0.5 0];
+        
     catch ME
+        app.StatusLabel.Text = ['导出失败: ' ME.message];
+        app.StatusLabel.FontColor = [0.8 0 0];
         errordlg(['导出失败: ' ME.message], '导出错误');
     end
 end

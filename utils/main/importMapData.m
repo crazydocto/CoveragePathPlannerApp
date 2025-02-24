@@ -24,8 +24,16 @@
 %   单位：哈尔滨工程大学
 
 function importMapData(app)
-    % 获取文件名
-    [filename, pathname] = uigetfile('*.mat', '选择地图数据文件');
+    % 使用应用程序保存的路径
+    defaultPath = fullfile(app.currentFolderPath, 'data');
+    
+    % 如果data文件夹不存在，则创建它
+    if ~exist(defaultPath, 'dir')
+        mkdir(defaultPath);
+    end
+    
+    % 获取文件名，设置默认路径为data文件夹
+    [filename, pathname] = uigetfile('*.mat', '选择地图数据文件', defaultPath);
     
     if isequal(filename, 0) || isequal(pathname, 0)
         % 用户取消操作

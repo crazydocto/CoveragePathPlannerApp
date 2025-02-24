@@ -1,8 +1,8 @@
 %% planAUVPaths - 生成AUV的避障路径规划
 %
 % 功能描述：
-%   生成AUV的避障路径规划，包括加载航点信息和障碍物信息，
-%   并根据给定的参数生成带有避障功能的路径。
+%   基于 Dubins 曲线理论,为 AUV 生成避障路径。结合已标注的障碍物信息,
+%   在保证安全的前提下生成平滑的路径。
 %
 % 输入参数：
 %   app        - AUVCoveragePathPlannerApp的实例
@@ -12,7 +12,7 @@
 %   dubinsnf   - Dubins路径结束段的离散点数
 %
 % 版本信息：
-%   当前版本：v1.1
+%   当前版本：v1.2
 %   创建日期：241101
 %   最后修改：250110
 %
@@ -100,7 +100,6 @@ function planAUVPaths(app,numLines,dubinsns,dubinsnl,dubinsnf)
 
     Plot_Traj_Coop(Coop_State,ObsInfo,Property,1,1);            
 
-    % app.drawPathsButton.Enable = 'on';
     app.SendLocalTCPButton.Enable = 'on';
     app.GenerateButton.Enable = 'on';
     
