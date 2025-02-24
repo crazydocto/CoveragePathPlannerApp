@@ -72,10 +72,10 @@ function planAUVPaths(app,numLines,dubinsns,dubinsnl,dubinsnf)
     % 设置障碍物(威胁圆)信息
     ObsInfo=circlesInfo;
     ObsInfo(:,3)=ObsInfo(:,3)+2;
-    [uav_num,~]=size(StartInfo);              % 获取AUV数量
+    [AUV_num,~]=size(StartInfo);              % 获取AUV数量
     [obs_num,~]=size(ObsInfo);                % 获取障碍物数量
 
-    Coop_State(1:uav_num)=struct(...          % AUV飞行路径信息的结构
+    Coop_State(1:AUV_num)=struct(...          % AUV航行路径信息的结构
         'trajLength',[],...                  % 所有路径长度数组
         'trajLength_max',0,...               % 最大路径长度
         'trajLength_min',0,...               % 最小路径长度
@@ -87,14 +87,14 @@ function planAUVPaths(app,numLines,dubinsns,dubinsnl,dubinsnf)
         'TrajSeq_Coop',[]);                   % 协作路径序列矩阵
 
     % 按顺序规划每个AUV从起点到终点的路径
-    for uav_index=1:2*numLines-1              % 遍历每个AUV
-        start_info=StartInfo(uav_index,:);    % 获取AUV的起点信息
-        finish_info=FinishInfo(uav_index,:);  % 获取AUV的终点信息
+    for AUV_index=1:2*numLines-1              % 遍历每个AUV
+        start_info=StartInfo(AUV_index,:);    % 获取AUV的起点信息
+        finish_info=FinishInfo(AUV_index,:);  % 获取AUV的终点信息
         Property.radius=start_info(4);        % 根据初始信息设置AUV的转弯半径
-        TrajSeqCell=trajCollection...        % 计算AUV的所有可用飞行路径
+        TrajSeqCell=trajCollection...        % 计算AUV的所有可用航行路径
             (start_info,finish_info,ObsInfo,Property);                  
-        Coop_State(uav_index)=coopStateUpdate...  % 从可用飞行路径中选择基本路径
-            (TrajSeqCell,Coop_State(uav_index),ObsInfo,Property); % 并优化基本路径以生成协作路径
+        Coop_State(AUV_index)=coopStateUpdate...  % 从可用航行路径中选择基本路径
+            (TrajSeqCell,Coop_State(AUV_index),ObsInfo,Property); % 并优化基本路径以生成协作路径
 
         plotTrajMultiModification(TrajSeqCell,ObsInfo,Property);
         hold on;

@@ -1,16 +1,16 @@
-%% coopStateUpdate - 更新合作飞行状态
+%% coopStateUpdate - 更新合作航行状态
 %
 % 功能描述：
-%   根据给定的路径单元数组、障碍物信息和路径规划参数，更新UAV的合作飞行状态。
+%   根据给定的路径单元数组、障碍物信息和路径规划参数，更新AUV的合作航行状态。
 %
 % 输入参数：
 %   TrajSeqCell - 可用路径的单元数组
-%   state       - UAV的飞行路径信息结构体
+%   state       - AUV的航行路径信息结构体
 %   ObsInfo     - 障碍物信息矩阵
 %   Property    - 路径规划参数结构体
 %
 % 输出参数：
-%   state       - 更新后的UAV飞行路径信息结构体
+%   state       - 更新后的AUV航行路径信息结构体
 %
 % 版本信息：
 %   当前版本：v1.1
@@ -28,7 +28,7 @@ function State = coopStateUpdate(TrajSeqCell,State,ObsInfo,Property)
 
 [~,n]=size(TrajSeqCell);                                    % Obtain the number of paths
 State.trajLength=zeros(n,1);                               % Initialize the array of path length
-State.TrajSeqCell=TrajSeqCell;                              % Save cell array of available paths for the UAV
+State.TrajSeqCell=TrajSeqCell;                              % Save cell array of available paths for the AUV
 
 %% Obtain path information
 for i=1:n                                                   % Traverse each path

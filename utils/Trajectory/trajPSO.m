@@ -4,13 +4,13 @@
 %   使用粒子群优化算法调整每个路径段的起始和结束弧半径，使路径长度尽可能接近预期路径长度。
 %
 % 输入参数：
-%   TrajSeq   - UAV路径信息矩阵
-%   State     - UAV飞行路径信息结构体
+%   TrajSeq   - AUV路径信息矩阵
+%   State     - AUV航行路径信息结构体
 %   ObsInfo   - 障碍物信息矩阵
 %   Property  - 路径规划参数结构体
 %
 % 输出参数：
-%   TrajSeq_new - 调整后的UAV路径信息矩阵
+%   TrajSeq_new - 调整后的AUV路径信息矩阵
 %   flag        - 路径生成结果标志
 %
 % 版本信息：
