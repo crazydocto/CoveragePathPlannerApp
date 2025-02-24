@@ -1,7 +1,7 @@
-%% trajCollection - 为每个UAV规划避障路径
+%% trajCollection - 为每个AUV规划避障路径
 %
 % 功能描述：
-%   根据起始点和终点信息，为每个UAV规划避障路径。
+%   根据起始点和终点信息，为每个AUV规划避障路径。
 %
 % 输入参数：
 %   StartInfo  - 起点信息
@@ -71,10 +71,10 @@ while TrajFlag~=1
             StartInfo(2)=TrajPast(i,14);                            % Set starting point y coordinate;
             StartInfo(3)=TrajPast(i,15);                            % Set starting deading angle
             if TrajPast(i,25)~=0                                    % If the previous path segment was an obstacle avoidance path
-                if Property.radius<TrajPast(i,16)                   % If the turning radius of the UAV is smaller than the radius of the obstacle
+                if Property.radius<TrajPast(i,16)                   % If the turning radius of the AUV is smaller than the radius of the obstacle
                     StartInfo(4)=TrajPast(i,16);                    % Set the obstacle radius as the starting radius
-                else                                                % If the turning radius of the UAV is larger than the radius of the obstacle
-                    StartInfo(4)=Property.radius;                   % Set the turning radius of the UAV as the starting radius
+                else                                                % If the turning radius of the AUV is larger than the radius of the obstacle
+                    StartInfo(4)=Property.radius;                   % Set the turning radius of the AUV as the starting radius
                 end
             end
             Property.obs_last=TrajPast(i,25);                       % Update the number of obstacle intersect with the previous path segments in Property

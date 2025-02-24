@@ -32,40 +32,40 @@ State.TrajSeqCell=TrajSeqCell;                              % Save cell array of
 
 %% Obtain path information
 for i=1:n                                                   % Traverse each path
-   length=trajLength(TrajSeqCell{1,i});                    % Calculate path length
-   State.trajLength(i,1)=length;                           % Save path length
+    length=trajLength(TrajSeqCell{1,i});                    % Calculate path length
+    State.trajLength(i,1)=length;                           % Save path length
 
-   %% Obtain the longest and shortest flight paths
-   if i==1                                                  % If it is the first path
-       State.trajLength_max=length;                        % update longest path length
-       State.trajLength_min=length;                        % update shortest path length
-   end
-   if length>State.trajLength_max
-       State.trajLength_max=length;                        % update longest path length
-   end
-   if length<State.trajLength_min
-       State.trajLength_min=length;                        % update shortest path length
-   end
+    %% Obtain the longest and shortest flight paths
+    if i==1                                                  % If it is the first path
+        State.trajLength_max=length;                        % update longest path length
+        State.trajLength_min=length;                        % update shortest path length
+    end
+    if length>State.trajLength_max
+        State.trajLength_max=length;                        % update longest path length
+    end
+    if length<State.trajLength_min
+        State.trajLength_min=length;                        % update shortest path length
+    end
 
-   %% The expected path length should be within the interval of two basic path lengths
-   % Find the path that is shorter than and closest to the expected path length (Call is as "bottom" path)
-   if length<State.ideal_length
-       if State.traj_index_bottom==0
-           State.traj_index_bottom=i;
-       elseif length>State.trajLength...
-               (State.traj_index_bottom)
-           State.traj_index_bottom=i;
-       end
-   end
-   % Find the path that is longer than and closest to the expected path length (Call is as "top" path)
-   if length>State.ideal_length
-       if State.traj_index_top==0
-           State.traj_index_top=i;
-       elseif length<State.trajLength...
-               (State.traj_index_top)
-           State.traj_index_top=i;
-       end
-   end
+    %% The expected path length should be within the interval of two basic path lengths
+    % Find the path that is shorter than and closest to the expected path length (Call is as "bottom" path)
+    if length<State.ideal_length
+        if State.traj_index_bottom==0
+            State.traj_index_bottom=i;
+        elseif length>State.trajLength...
+                (State.traj_index_bottom)
+            State.traj_index_bottom=i;
+        end
+    end
+    % Find the path that is longer than and closest to the expected path length (Call is as "top" path)
+    if length>State.ideal_length
+        if State.traj_index_top==0
+            State.traj_index_top=i;
+        elseif length<State.trajLength...
+                (State.traj_index_top)
+            State.traj_index_top=i;
+        end
+    end
 end
 
 %% Generate cooperative path

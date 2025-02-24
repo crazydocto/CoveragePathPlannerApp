@@ -1,10 +1,10 @@
 %% trajLength - 计算路径长度
 %
 % 功能描述：
-%   计算UAV路径序列的总长度。
+%   计算AUV路径序列的总长度。
 %
 % 输入参数：
-%   TrajSeq - UAV路径序列矩阵
+%   TrajSeq - AUV路径序列矩阵
 %
 % 输出参数：
 %   length - 路径总长度

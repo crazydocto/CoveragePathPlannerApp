@@ -1,10 +1,10 @@
-%% plotTrajSingle - 绘制UAV的路径
+%% plotTrajSingle - 绘制AUV的路径
 %
 % 功能描述：
-%   绘制UAV的路径，包括起点、终点、路径本身以及障碍物。
+%   绘制AUV的路径，包括起点、终点、路径本身以及障碍物。
 %
 % 输入参数：
-%   TrajSeq  - UAV路径信息矩阵
+%   TrajSeq  - AUV路径信息矩阵
 %   ObsInfo  - 障碍物信息矩阵
 %   Property - 路径规划参数结构体
 %   flag     - 绘制辅助路径的选项，0: 不绘制；1: 绘制
@@ -30,7 +30,7 @@ scale=Property.scale;                                           % Set the drawin
 [Traj_x,Traj_y]=trajDiscrete(TrajSeq,Property);                % Obtain the discretized waypoint sequence
 [~,n1]=size(Traj_x);                                            % Obtain the number of waypoints
 [n2,~]=size(TrajSeq);                                           % Obtain the number of flight path segments
-% figure('name','UAV Trajectory');
+% figure('name','AUV Trajectory');
 % hold on;
 
 %% Plot obstacles
@@ -52,9 +52,9 @@ x_s=Traj_x(1);                                                  % Starting point
 y_s=Traj_y(1);                                                  % Starting point y coordinate
 x_f=Traj_x(n1);                                                 % Ending point x coordinate
 y_f=Traj_y(n1);                                                 % Ending point y coordinate
-x_pt=[x_s,x_f];
-y_pt=[y_s,y_f];
-z_pt=[25000,25000];
+% x_pt=[x_s,x_f];
+% y_pt=[y_s,y_f];
+% z_pt=[25000,25000];
 % pt=scatter3(x_pt*scale,y_pt*scale,z_pt*scale,80);               % Plot starting and ending points
 % pt.MarkerFaceColor='r';
 % pt.MarkerEdgeColor='k';
@@ -83,13 +83,13 @@ if flag==1
     end
 end
 
-%% If the UAV invades the obatacle (threat circle), draw the compressed threat circle
+%% If the AUV invades the obatacle (threat circle), draw the compressed threat circle
 flag_invasion=0;
 for i=1:n2
     if TrajSeq(i,25)==0
         continue;
     end
-    if TrajSeq(i,32)==1&&...                                    % If the UAV invades the obstacle
+    if TrajSeq(i,32)==1&&...                                    % If the AUV invades the obstacle
             TrajSeq(i,16)<ObsInfo(TrajSeq(i,25),3)              % And the radius of the ending arc is smaller than the radius of the obstacle
         xc_f=TrajSeq(i,18);                                     % Obtain ending arc center x coordinate
         yc_f=TrajSeq(i,19);                                     % Obtain ending arc center y coordinate

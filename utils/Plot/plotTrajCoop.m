@@ -1,10 +1,10 @@
-%% plotTrajCoop - 绘制所有UAV的备选路径和合作路径
+%% plotTrajCoop - 绘制所有AUV的备选路径和合作路径
 %
 % 功能描述：
-%   绘制所有UAV的备选路径和合作路径。
+%   绘制所有AUV的备选路径和合作路径。
 %
 % 输入参数：
-%   Coop_State - UAV路径信息的单元数组
+%   Coop_State - AUV路径信息的单元数组
 %   ObsInfo    - 障碍物信息矩阵
 %   Property   - 路径规划参数结构体
 %   flag       - 绘制备选路径的选项，0: 不绘制；1: 绘制
@@ -67,7 +67,7 @@ function plotTrajCoop(Coop_State,ObsInfo,Property,flag,demo)
     pt.MarkerFaceColor='r';
     pt.MarkerEdgeColor='k';
 
-    for i=1:n                                                           % 绘制每个UAV的协作路径
+    for i=1:n                                                           % 绘制每个AUV的协作路径
         [Traj_x,Traj_y]=trajDiscrete...
             (Coop_State(i).TrajSeq_Coop,Property);                      % 获取离散航点序列
         hold on;

@@ -1,10 +1,10 @@
 %% dubinsSelection - 根据特定条件选择路径
 %
 % 功能描述：
-%   从给定的UAV路径信息矩阵中选择符合特定条件的路径。
+%   从给定的AUV路径信息矩阵中选择符合特定条件的路径。
 %
 % 输入参数：
-%   TrajCollect - UAV路径信息矩阵
+%   TrajCollect - AUV路径信息矩阵
 %   ObsInfo     - 障碍物信息矩阵
 %   Property    - 路径规划参数结构体
 %   stage       - 路径规划阶段

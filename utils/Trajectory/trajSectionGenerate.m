@@ -1,7 +1,7 @@
-%% trajSectionGenerate - 生成UAV的路径段
+%% trajSectionGenerate - 生成AUV的路径段
 %
 % 功能描述：
-%   从当前位置到终点或障碍物切点生成UAV的路径段。
+%   从当前位置到终点或障碍物切点生成AUV的路径段。
 %
 % 输入参数：
 %   StartInfo  - 起点信息
@@ -75,7 +75,7 @@ while flag_obs==0
         TrajTotal((i-1)*4+1:i*4,:)=TrajCollect;                     % Store the generated path information in the paths total information matrix
         
         Rf_max=0;                                                   % Initialize tangent circle radius
-        for j=1:2                                                   % Traverse the UAV to fly left (L) and right (R) at the initial position
+        for j=1:2                                                   % Traverse the AUV to fly left (L) and right (R) at the initial position
             dubins_info_temp=dubins_info1;                          % Initialize a temporary Dubins path information structure
             dubins_info_temp=dubinsGenerate(dubins_info_temp,j);   % Generate path based on L or R
             xc=dubins_info_temp.start.xc;                           % Obtain the x-coordinate of the starting arc center
@@ -110,12 +110,12 @@ end
 
 
 %% There is no available flight path, and the radius of the threat circle needs to be compressed
-if traj_index==0                                                    % If there is no available path, the UAV must enter the threat circle
+if traj_index==0                                                    % If there is no available path, the AUV must enter the threat circle
     Property.invasion=1;                                            % Set the intrusion threat circle flag to 1
     for i=1:obs_count                                               % Traverse every obstacle
 
         Rf_max=0;                                                   % Initialize tangent circle radius
-        for j=1:2                                                   % Traverse the UAV to fly left (L) and right (R) at the initial position
+        for j=1:2                                                   % Traverse the AUV to fly left (L) and right (R) at the initial position
             dubins_info_temp=dubins_info;                           % Initialize a temporary Dubins path information structure
             dubins_info_temp=dubinsGenerate(dubins_info_temp,j);   % Generate path based on L or R
             xc=dubins_info_temp.start.xc;                           % Obtain the x-coordinate of the starting arc center
@@ -126,7 +126,7 @@ if traj_index==0                                                    % If there i
             Rf=sqrt((xc-xo)^2+(yc-yo)^2)-Rs;                        % Calculate the radius of the compressed obstacle（threat circle）
             if Rf>Rf_max                                            % Due to the different center positions of L and R, the RF is also different
                 Rf_max=Rf;                                          % Select a larger tangent circle
-            end                                                     % The depth (radius compression) at which UAVs enter the threat circle should be as small as possible
+            end                                                     % The depth (radius compression) at which AUVs enter the threat circle should be as small as possible
         end
         
         ObsInfo(ObsCur(1,i),3)=Rf_max*0.99;                         % Update the compressed obstacle radius in ObsInfo

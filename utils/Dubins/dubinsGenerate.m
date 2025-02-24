@@ -28,7 +28,7 @@ dubins_info.traj.type=type;                                 % Set path type
 dubins_info.traj.erro=0;                                    % Reset error marker
 
 %% Calculation parameters of the Dubins path
-% Please refer to Eq.(1) and Table 1 in Paper "Multi-UAV Cooperative Path-planning Under Complex Threat Environment" for details
+% Please refer to Eq.(1) and Table 1 in Paper "Multi-AUV Cooperative Path-planning Under Complex Threat Environment" for details
 circle_centre_start_param = [-1, 1,-1, 1];
 circle_centre_finish_param =[-1, 1, 1,-1];
 exit_point_angle_param_1 =  [-1, 1, 1,-1];

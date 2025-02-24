@@ -55,10 +55,10 @@ for i=1:dubins_num
         start_info(1)=TrajSeq_new(i-1,13);                          % Set the starting point x coordinate
         start_info(2)=TrajSeq_new(i-1,14);                          % Set the starting point y coordinate
         start_info(3)=TrajSeq_new(i-1,15);                          % Set starting heading angle
-        if Property.radius<TrajSeq(i-1,16)                          % If the turning radius of the UAV is smaller than the radius of the obstacle
+        if Property.radius<TrajSeq(i-1,16)                          % If the turning radius of the AUV is smaller than the radius of the obstacle
             start_info(4)=TrajSeq(i-1,16);                          % Set obstacle's radius as starting arc radius
-        else                                                        % If the turning radius of the UAV is larger than the radius of the obstacle
-            start_info(4)=Property.radius;                          % Set UAV's radius as starting arc radius
+        else                                                        % If the turning radius of the AUV is larger than the radius of the obstacle
+            start_info(4)=Property.radius;                          % Set AUV's radius as starting arc radius
         end
         start_info(4)=start_info(4)+Increment(i*2-1);               % Adjust the starting arc radius with increment
     end

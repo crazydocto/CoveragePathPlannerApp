@@ -1,10 +1,10 @@
 %% dubinsSelectionThreat - 选择威胁最小的路径
 %
 % 功能描述：
-%   从给定的UAV路径信息矩阵中选择威胁最小的路径。
+%   从给定的AUV路径信息矩阵中选择威胁最小的路径。
 %
 % 输入参数：
-%   TrajCollect - UAV路径信息矩阵
+%   TrajCollect - AUV路径信息矩阵
 %   ObsInfo     - 障碍物信息矩阵
 %   i           - TrajCollect的行号
 %   threat_min  - 最小威胁（输入/输出）
