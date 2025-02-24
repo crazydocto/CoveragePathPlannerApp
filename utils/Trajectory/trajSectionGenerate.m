@@ -22,14 +22,14 @@
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
 
-function TrajInfo = Traj_Section_Generate(StartInfo,FinishInfo,ObsInfo,Property)
+function TrajInfo = trajSectionGenerate(StartInfo,FinishInfo,ObsInfo,Property)
 %% Plan the path segments from the current location to the endpoint
 dubins_info=...                                                     % Initialize the Dubins structure based on the starting and ending point information
-    Dubins_Init(StartInfo(1,:),FinishInfo(1,:));                            
+    dubinsInit(StartInfo(1,:),FinishInfo(1,:));                            
 TrajCollect=...                                                     % Generate all Dubins paths (LSL, RSR, RSL, LSR) that connect the starting point to the endpoint
-    Dubins_Collection(dubins_info,ObsInfo,0,Property);              % Each path information is a row vector in the TrajCollect matrix
+    dubinsCollection(dubins_info,ObsInfo,0,Property);              % Each path information is a row vector in the TrajCollect matrix
 [traj_index,ObsCur]=...                                             % Select the paths that meet the requirements from all the generated dubins paths
-    Dubins_Selection(TrajCollect,ObsInfo,Property,1);               % At least the path must not intersect with obstacles
+    dubinsSelection(TrajCollect,ObsInfo,Property,1);               % At least the path must not intersect with obstacles
 [~,n1]=size(TrajCollect);                                           % Obtain the length of path information，(equals to Property.Info_length)
 
 if traj_index(1,1)~=0                                               % If there are paths that meets the requirements
@@ -38,7 +38,7 @@ if traj_index(1,1)~=0                                               % If there a
     for i=1:n2                                                      % Traverse all paths that meet the requirements
         TrajInfo(i,:)=TrajCollect(traj_index(i),:);                 % Store the path information as row vectors in the TrajInfo matrix in sequence
         TrajInfo(i,33)=1;                                           % Set the termination flag to 1 in each path information to represent reaching the endpoint
-        %Plot_Traj_Single(TrajInfo(i,:),ObsInfo,Property)
+        %plotTrajSingle(TrajInfo(i,:),ObsInfo,Property)
     end
     return;                                                         % End function, has reached the endpoint and has not encountered any obstacles
 end                                                               
@@ -68,14 +68,14 @@ while flag_obs==0
         dubins_info1.finish.xc=ObsInfo(ObsCur(1,i),1);              % Set the x-coordinate of the ending arc center to the x-coordinate of the obstacle center
         dubins_info1.finish.yc=ObsInfo(ObsCur(1,i),2);              % Set the y-coordinate of the ending arc center to the y-coordinate of the obstacle center
         dubins_info1.finish.R=ObsInfo(ObsCur(1,i),3);               % Set the radius of the ending arc to the radius of the obstacle (threat circle)
-        TrajCollect=Dubins_Collection...                            % Generate all tangent paths to the current obstacle (threat circle)
+        TrajCollect=dubinsCollection...                            % Generate all tangent paths to the current obstacle (threat circle)
             (dubins_info1,ObsInfo,ObsCur(i),Property);              % At most 4 (separated, tangent) and at least 2 (intersecting)
         TrajTotal((i-1)*4+1:i*4,:)=TrajCollect;                     % Store the generated path information in the paths total information matrix
         
         Rf_max=0;                                                   % Initialize tangent circle radius
         for j=1:2                                                   % Traverse the UAV to fly left (L) and right (R) at the initial position
             dubins_info_temp=dubins_info1;                          % Initialize a temporary Dubins path information structure
-            dubins_info_temp=Dubins_Generate(dubins_info_temp,j);   % Generate path based on L or R
+            dubins_info_temp=dubinsGenerate(dubins_info_temp,j);   % Generate path based on L or R
             xc=dubins_info_temp.start.xc;                           % Obtain the x-coordinate of the starting arc center
             yc=dubins_info_temp.start.yc;                           % Obtain the y-coordinate of the starting arc center
             Rs=dubins_info_temp.start.R;                            % Obtain the radius of the starting arc
@@ -95,7 +95,7 @@ while flag_obs==0
     end
 
     [traj_index,ObsCur_new]=...                                     % Select the paths that meet the requirements from all the generated dubins paths
-        Dubins_Selection(TrajTotal,ObsInfo,Property,2);             % 1: The path does not intersect with obstacles
+        dubinsSelection(TrajTotal,ObsInfo,Property,2);             % 1: The path does not intersect with obstacles
                                                                     % 2: The turning angle of the path shall not exceed 3 * pi/2
                                                                     % 3: Simultaneously satisfying 1 and 2
     if traj_index(1)~=0||sum(flag_tan)==0                           % If there are avaliable paths or if compression of the threat circle is required
@@ -115,7 +115,7 @@ if traj_index==0                                                    % If there i
         Rf_max=0;                                                   % Initialize tangent circle radius
         for j=1:2                                                   % Traverse the UAV to fly left (L) and right (R) at the initial position
             dubins_info_temp=dubins_info;                           % Initialize a temporary Dubins path information structure
-            dubins_info_temp=Dubins_Generate(dubins_info_temp,j);   % Generate path based on L or R
+            dubins_info_temp=dubinsGenerate(dubins_info_temp,j);   % Generate path based on L or R
             xc=dubins_info_temp.start.xc;                           % Obtain the x-coordinate of the starting arc center
             yc=dubins_info_temp.start.yc;                           % Obtain the y-coordinate of the starting arc center
             Rs=dubins_info_temp.start.R;                            % Obtain the radius of the starting arc
@@ -134,12 +134,12 @@ if traj_index==0                                                    % If there i
         dubins_info1.finish.yc=ObsInfo(ObsCur(1,i),2);              % Set the y-coordinate of the ending arc center to the y-coordinate of the obstacle center
         dubins_info1.finish.R=Rf_max;                               % Set the radius of the ending arc to the radius of the obstacle (threat circle)
         
-        TrajCollect=Dubins_Collection...                            % Generate all tangent paths to the current obstacle (threat circle)
+        TrajCollect=dubinsCollection...                            % Generate all tangent paths to the current obstacle (threat circle)
             (dubins_info1,ObsInfo,ObsCur(i),Property);              % After radius compression, there will be four paths when two circles are tangent
         TrajTotal((i-1)*4+1:i*4,:)=TrajCollect;                     % Store the generated path information in the paths total information matrix
     end
     [traj_index,~]=...                                              % % Select the paths that meet the requirements from all the generated dubins paths
-        Dubins_Selection(TrajTotal,ObsInfo,Property,2);             % 1: The path does not intersect with obstacles
+        dubinsSelection(TrajTotal,ObsInfo,Property,2);             % 1: The path does not intersect with obstacles
                                                                     % 2: The turning angle of the path shall not exceed 3 * pi/2                                                                    % 3: Simultaneously satisfying 1 and 2
 end
 
@@ -150,7 +150,7 @@ else
     TrajInfo=zeros(n2,n1);                                          % Initialize the path information matrix based on the number of paths (output result)
     for i=1:n2                                                      % Traverse all paths that meet the requirements
         TrajInfo(i,:)=TrajTotal(traj_index(i),:);                   % Store the path information as row vectors in the TrajInfo matrix in sequence
-        %Plot_Traj_Single(TrajInfo(i,:),ObsInfo,Property,0)
+        %plotTrajSingle(TrajInfo(i,:),ObsInfo,Property,0)
     end
 end
 

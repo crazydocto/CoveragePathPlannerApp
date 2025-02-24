@@ -23,7 +23,7 @@
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
 
-function [TrajSeq_new,flag] = Traj_PSO(TrajSeq,State,ObsInfo,Property)
+function [TrajSeq_new,flag] = trajPSO(TrajSeq,State,ObsInfo,Property)
 %% Define initialization information for PSO algorithm
 [dubins_num,~]=size(TrajSeq);                               % Obtain the number of Dubins path segments
 increment_num=dubins_num*2;                                 % Calculate the number of radius increments
@@ -62,11 +62,11 @@ iter=1;                                                     % Initialize iterati
 while iter<=iter_max                                        % Iterative Calculation of PSO
     for n=1:number                                          % Calculate the information of each particle
         Increment=position(n,:);                            % Obtain increments
-        [TrajSeq_new,flag]=Traj_Seq_Modification...         % Generate the modified path based on the primary path and radius increments
+        [TrajSeq_new,flag]=trajSeqModification...         % Generate the modified path based on the primary path and radius increments
             (TrajSeq,Increment,ObsInfo,Property);
-        %Plot_Traj_Single(TrajSeq_new,ObsInfo,Property,1)
+        %plotTrajSingle(TrajSeq_new,ObsInfo,Property,1)
         if flag~=0                                          % If the path exists
-            length=Traj_Length(TrajSeq_new);                % Calculate path length
+            length=trajLength(TrajSeq_new);                % Calculate path length
         end
         if flag==2                                          % If the path does not intersect with obstacles
             fitness=abs(length-State.ideal_length);         % Calculate the objective value of the current particle generated path
@@ -114,7 +114,7 @@ end
 %% Generate the optimized path
 [~,index]=min(fit_par_best);                                % obtian the best particle
 Increment=pos_par_best(index,:);                            % minimum objective value position of the particle (best increments)
-[TrajSeq_new,flag]=Traj_Seq_Modification...                 % Generate the modified path corresponding to the best increments
+[TrajSeq_new,flag]=trajSeqModification...                 % Generate the modified path corresponding to the best increments
     (TrajSeq,Increment,ObsInfo,Property);
 
 end

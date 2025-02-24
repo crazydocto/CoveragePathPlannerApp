@@ -74,9 +74,9 @@ function planAUVPaths(app,numLines,dubinsns,dubinsnl,dubinsnf)
     [obs_num,~]=size(ObsInfo);                % 获取障碍物数量
 
     Coop_State(1:uav_num)=struct(...          % AUV飞行路径信息的结构
-        'traj_length',[],...                  % 所有路径长度数组
-        'traj_length_max',0,...               % 最大路径长度
-        'traj_length_min',0,...               % 最小路径长度
+        'trajLength',[],...                  % 所有路径长度数组
+        'trajLength_max',0,...               % 最大路径长度
+        'trajLength_min',0,...               % 最小路径长度
         'TrajSeqCell',[],...                  % 路径序列单元数组
         'ideal_length',0,...                  % 期望路径长度
         'optim_length',0,...                  % 优化后的路径长度
@@ -89,16 +89,16 @@ function planAUVPaths(app,numLines,dubinsns,dubinsnl,dubinsnf)
         start_info=StartInfo(uav_index,:);    % 获取AUV的起点信息
         finish_info=FinishInfo(uav_index,:);  % 获取AUV的终点信息
         Property.radius=start_info(4);        % 根据初始信息设置AUV的转弯半径
-        TrajSeqCell=Traj_Collection...        % 计算AUV的所有可用飞行路径
+        TrajSeqCell=trajCollection...        % 计算AUV的所有可用飞行路径
             (start_info,finish_info,ObsInfo,Property);                  
-        Coop_State(uav_index)=Coop_State_Update...  % 从可用飞行路径中选择基本路径
+        Coop_State(uav_index)=coopStateUpdate...  % 从可用飞行路径中选择基本路径
             (TrajSeqCell,Coop_State(uav_index),ObsInfo,Property); % 并优化基本路径以生成协作路径
 
-        Plot_Traj_Multi_Modification(TrajSeqCell,ObsInfo,Property);
+        plotTrajMultiModification(TrajSeqCell,ObsInfo,Property);
         hold on;
     end
 
-    Plot_Traj_Coop(Coop_State,ObsInfo,Property,1,1);            
+    plotTrajCoop(Coop_State,ObsInfo,Property,1,1);            
 
     app.SendLocalTCPButton.Enable = 'on';
     app.GenerateButton.Enable = 'on';

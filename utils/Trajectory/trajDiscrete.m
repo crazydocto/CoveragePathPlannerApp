@@ -20,7 +20,7 @@
 %   作者：董星犴
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
-function [Traj_x,Traj_y] = Traj_Discrete(TrajSeq,Property)
+function [Traj_x,Traj_y] = trajDiscrete(TrajSeq,Property)
 [r,~]=size(TrajSeq);                                            % Obtain the number of Dubins path segments
 start_info=zeros(1,4);                                          % Initialize starting info
 finish_info=zeros(1,4);                                         % Initialize ending info
@@ -44,9 +44,9 @@ for i=1:r                                                       % Traverse every
     finish_info(3)=TrajSeq(i,15);                               % Ending heading angle
     finish_info(4)=TrajSeq(i,16);                               % Ending arc radius
 
-    dubins_info=Dubins_Init(start_info,finish_info);            % Initialize basic Dubins path structure
-    dubins_info=Dubins_Generate(dubins_info,type);              % Generate complete path information based on basic path information and path type
-    [dubins_x,dubins_y]=Dubins_Discret(dubins_info,ns,nl,nf);   % Discretize Dubins path into waypoints sequence
+    dubins_info=dubinsInit(start_info,finish_info);            % Initialize basic Dubins path structure
+    dubins_info=dubinsGenerate(dubins_info,type);              % Generate complete path information based on basic path information and path type
+    [dubins_x,dubins_y]=dubinsDiscret(dubins_info,ns,nl,nf);   % Discretize Dubins path into waypoints sequence
 
     [~,n]=size(dubins_x);                                       % Obtain the number of waypoints for the current Dubins path segment
     for j=1:n                                                   % Sequentially store the waypoints of the current path segment

@@ -13,7 +13,7 @@
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
 
-function [length_min,index] = Dubins_Selection_Length(TrajCollect,length_min,index,i)
+function [length_min,index] = dubinsSelectionLength(TrajCollect,length_min,index,i)
     length=TrajCollect(i,24);
 
     if length==0

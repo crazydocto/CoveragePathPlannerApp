@@ -21,7 +21,7 @@
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
 
-function TrajInfo = Traj_Info_Array(dubins_info,ObsSeries,Property)
+function TrajInfo = trajInfoArray(dubins_info,ObsSeries,Property)
 
 TrajInfo=zeros(1,Property.Info_length);
 [~,c]=size(ObsSeries);                                      % Obtain the length of the obstacle array

@@ -22,10 +22,10 @@
 %   作者：董星犴
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
-function [o1,l1]=Plot_Traj_Single(TrajSeq,ObsInfo,Property,flag)
+function [o1,l1]=plotTrajSingle(TrajSeq,ObsInfo,Property,flag)
 %% Initialize information 
 scale=Property.scale;                                           % Set the drawing scale
-[Traj_x,Traj_y]=Traj_Discrete(TrajSeq,Property);                % Obtain the discretized waypoint sequence
+[Traj_x,Traj_y]=trajDiscrete(TrajSeq,Property);                % Obtain the discretized waypoint sequence
 [~,n1]=size(Traj_x);                                            % Obtain the number of waypoints
 [n2,~]=size(TrajSeq);                                           % Obtain the number of flight path segments
 % figure('name','UAV Trajectory');

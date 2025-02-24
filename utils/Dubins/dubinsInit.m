@@ -20,7 +20,7 @@
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
 
-function dubins_info = Dubins_Init(start_info,finish_info)
+function dubins_info = dubinsInit(start_info,finish_info)
 
 dubins_info.traj.type=0;                                    % Type of Dubins path
 dubins_info.traj.erro=0;                                    % Error marker

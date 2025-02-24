@@ -21,27 +21,28 @@
 %   作者：董星犴
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
-function State = Coop_State_Update(TrajSeqCell,State,ObsInfo,Property)
+
+function State = coopStateUpdate(TrajSeqCell,State,ObsInfo,Property)
 
 [~,n]=size(TrajSeqCell);                                    % Obtain the number of paths
-State.traj_length=zeros(n,1);                               % Initialize the array of path length
+State.trajLength=zeros(n,1);                               % Initialize the array of path length
 State.TrajSeqCell=TrajSeqCell;                              % Save cell array of available paths for the UAV
 
 %% Obtain path information
 for i=1:n                                                   % Traverse each path
-   length=Traj_Length(TrajSeqCell{1,i});                    % Calculate path length
-   State.traj_length(i,1)=length;                           % Save path length
+   length=trajLength(TrajSeqCell{1,i});                    % Calculate path length
+   State.trajLength(i,1)=length;                           % Save path length
 
    %% Obtain the longest and shortest flight paths
    if i==1                                                  % If it is the first path
-       State.traj_length_max=length;                        % update longest path length
-       State.traj_length_min=length;                        % update shortest path length
+       State.trajLength_max=length;                        % update longest path length
+       State.trajLength_min=length;                        % update shortest path length
    end
-   if length>State.traj_length_max
-       State.traj_length_max=length;                        % update longest path length
+   if length>State.trajLength_max
+       State.trajLength_max=length;                        % update longest path length
    end
-   if length<State.traj_length_min
-       State.traj_length_min=length;                        % update shortest path length
+   if length<State.trajLength_min
+       State.trajLength_min=length;                        % update shortest path length
    end
 
    %% The expected path length should be within the interval of two basic path lengths
@@ -49,7 +50,7 @@ for i=1:n                                                   % Traverse each path
    if length<State.ideal_length
        if State.traj_index_bottom==0
            State.traj_index_bottom=i;
-       elseif length>State.traj_length...
+       elseif length>State.trajLength...
                (State.traj_index_bottom)
            State.traj_index_bottom=i;
        end
@@ -58,7 +59,7 @@ for i=1:n                                                   % Traverse each path
    if length>State.ideal_length
        if State.traj_index_top==0
            State.traj_index_top=i;
-       elseif length<State.traj_length...
+       elseif length<State.trajLength...
                (State.traj_index_top)
            State.traj_index_top=i;
        end
@@ -69,7 +70,7 @@ end
 % In the absence of a 'bottom' path, directly output the 'top' path
 if State.traj_index_bottom==0
     State.TrajSeq_Coop=State.TrajSeqCell{State.traj_index_top};
-    State.optim_length=Traj_Length(State.TrajSeq_Coop);
+    State.optim_length=trajLength(State.TrajSeq_Coop);
     return;
 end
 
@@ -88,17 +89,17 @@ if invasion_bottom==1
 else
     % Use particle swarm optimization algorithm to adjust the radius of the starting and ending arcs of each path segments, 
     % so that the path length is as close as possible to the expected path length
-    [TrajSeq_new,flag]=Traj_PSO(TrajSeq,State,ObsInfo,Property);
+    [TrajSeq_new,flag]=trajPSO(TrajSeq,State,ObsInfo,Property);
 end
 
 if flag==0
     TrajSeq_new=TrajSeq;
 end
 
-length_bottom=Traj_Length(TrajSeq_new);                     % Caluculate the "bottom" path length
+length_bottom=trajLength(TrajSeq_new);                     % Caluculate the "bottom" path length
 
 if State.traj_index_top~=0                                  % In the presence of a 'top' path
-    length_top=Traj_Length...                               % Caluculate the "top" path length
+    length_top=trajLength...                               % Caluculate the "top" path length
         (State.TrajSeqCell{State.traj_index_top});
     % Compare the "bottom" path and the "top" path to see which one has the closest length to the expected path length
     if abs(length_bottom-State.ideal_length) > abs(length_top-State.ideal_length)
@@ -113,6 +114,6 @@ else
     State.TrajSeq_Coop=TrajSeq_new;                        
 end
 
-State.optim_length=Traj_Length(State.TrajSeq_Coop);         % Calculate the cooperative path length
+State.optim_length=trajLength(State.TrajSeq_Coop);         % Calculate the cooperative path length
 end
 

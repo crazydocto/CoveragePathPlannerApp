@@ -1,37 +1,37 @@
-%% dubinsDiscret - ½«DubinsÂ·¾¶ÀëÉ¢»¯Îªº½µãÐòÁÐ
+%% dubinsDiscret - ï¿½ï¿½DubinsÂ·ï¿½ï¿½ï¿½ï¿½É¢ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 %
-% ¹¦ÄÜÃèÊö£º
-%   ½«ÍêÕûµÄDubinsÂ·¾¶ÐÅÏ¢ÀëÉ¢»¯Îªº½µãÐòÁÐ¡£
+% ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+%   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½DubinsÂ·ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½É¢ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½
 %
-% ÊäÈë²ÎÊý£º
-%   dubins_info - ÍêÕûµÄDubinsÂ·¾¶ÐÅÏ¢
-%   ns          - ÆðÊ¼»¡µÄÀëÉ¢µãÊý
-%   nl          - Ö±Ïß¶ÎµÄÀëÉ¢µãÊý
-%   nf          - ½áÊø»¡µÄÀëÉ¢µãÊý
+% ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+%   dubins_info - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½DubinsÂ·ï¿½ï¿½ï¿½ï¿½Ï¢
+%   ns          - ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¢ï¿½ï¿½ï¿½ï¿½
+%   nl          - Ö±ï¿½ß¶Îµï¿½ï¿½ï¿½É¢ï¿½ï¿½ï¿½ï¿½
+%   nf          - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¢ï¿½ï¿½ï¿½ï¿½
 %
-% Êä³ö²ÎÊý£º
-%   dubins_x    - º½µãx×ø±êÊý×é
-%   dubins_y    - º½µãy×ø±êÊý×é
+% ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+%   dubins_x    - ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+%   dubins_y    - ï¿½ï¿½ï¿½ï¿½yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 %
-% °æ±¾ÐÅÏ¢£º
-%   µ±Ç°°æ±¾£ºv1.1
-%   ´´½¨ÈÕÆÚ£º241101
-%   ×îºóÐÞ¸Ä£º250110
+% ï¿½æ±¾ï¿½ï¿½Ï¢ï¿½ï¿½
+%   ï¿½ï¿½Ç°ï¿½æ±¾ï¿½ï¿½v1.1
+%   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú£ï¿½241101
+%   ï¿½ï¿½ï¿½ï¿½Þ¸Ä£ï¿½250110
 %
-% ×÷ÕßÐÅÏ¢£º
-%   ×÷Õß£º¶­ÐÇáí
-%   ÓÊÏä£º1443123118@qq.com
-%   µ¥Î»£º¹þ¶û±õ¹¤³Ì´óÑ§
+% ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½
+%   ï¿½ï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+%   ï¿½ï¿½ï¿½ä£º1443123118@qq.com
+%   ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½Ñ§
 
-function [dubins_x,dubins_y] = Dubins_Discret(dubins_info,ns,nl,nf)
+function [dubins_x,dubins_y] = dubinsDiscret(dubins_info,ns,nl,nf)
 
 % With the determination of the starting and ending positions and velocity directions, 
 % there are a total of four types of dubins paths
 % (1) LSL (Left Straight Left),  (2) RSR (Right Straight Right)
 % (3) LSR (Left Straight Right), (4) RSL (Right Straight Left)
 
-circle_centre_start_param = [-1, 1,-1, 1];                  %¡¡-1(L), 1(R)
-circle_centre_finish_param =[-1, 1, 1,-1];                  %¡¡-1(L), 1(R)
+circle_centre_start_param = [-1, 1,-1, 1];                  %ï¿½ï¿½-1(L), 1(R)
+circle_centre_finish_param =[-1, 1, 1,-1];                  %ï¿½ï¿½-1(L), 1(R)
 param_s=circle_centre_start_param(dubins_info.traj.type);   % Starting arc center calculation parameters
 param_f=circle_centre_finish_param(dubins_info.traj.type);  % Ending arc center calculation parameters
 

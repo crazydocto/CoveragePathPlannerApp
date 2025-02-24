@@ -25,7 +25,7 @@
 %   作者：董星犴
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
-function [TrajSeq_new,flag] = Traj_Seq_Modification(TrajSeq,Increment,ObsInfo,Property)
+function [TrajSeq_new,flag] = trajSeqModification(TrajSeq,Increment,ObsInfo,Property)
 
 [dubins_num,clm]=size(TrajSeq);                                     % Obtain the number of Dubins path segments
 [~,increm_num]=size(Increment);                                     % Obtain the number of increments
@@ -66,27 +66,27 @@ for i=1:dubins_num
         finish_info(2)=TrajSeq(i,14);                               % Set the ending point y coordinate
         finish_info(3)=TrajSeq(i,15);                               % Set ending heading angle
         finish_info(4)=TrajSeq(i,16)+Increment(i*2);                % Set ending arc radius
-        dubins_info=Dubins_Init(start_info,finish_info);            % Initial Dubins path info structure
+        dubins_info=dubinsInit(start_info,finish_info);            % Initial Dubins path info structure
     else                                                            % Set the ending point of tangent path based on the target obstacle
-        dubins_info=Dubins_Init(start_info,finish_info);            % Initial Dubins path info structure
+        dubins_info=dubinsInit(start_info,finish_info);            % Initial Dubins path info structure
         dubins_info.traj.flag=1;                                    % Set path type as tangent path
         dubins_info.finish.xc=ObsInfo(obs_index,1);                 % Set x coordinate of ending arc center  
         dubins_info.finish.yc=ObsInfo(obs_index,2);                 % Set y coordinate of ending arc center
         dubins_info.finish.R=ObsInfo(obs_index,3)+Increment(i*2);   % Set ending arc radius
     end
     %% Generate and save Dubins paths
-    dubins_info=Dubins_Generate(dubins_info,type);                  % Calculate Dubins path info
+    dubins_info=dubinsGenerate(dubins_info,type);                  % Calculate Dubins path info
     if dubins_info.traj.length==0                                   % If the path length is 0, it indicates that there is no avaliable path segment
         flag=0;                                                     % Set path generate flag to 0
         return;
     end
     Property.obs_last=TrajSeq(i,25);                                % Update the obstacle number that needs to be avoided in Property
     Property.invasion=TrajSeq(i,32);                                % Update whether the path allows intrusion into the threat area in Property
-    ObsSeries=Dubins_Obs_Check(dubins_info,ObsInfo,Property);       % Perform obstacle detection on the current path segment
+    ObsSeries=dubinsObsCheck(dubins_info,ObsInfo,Property);       % Perform obstacle detection on the current path segment
     if ObsSeries(1,1)~=0                                            % if path intesect with obstacles
         flag=1;                                                     % Set path generate flag to 1
     end
-    TrajInfo=Traj_Info_Array(dubins_info,ObsSeries,Property);       % Store path info and obstacle info into an array
+    TrajInfo=trajInfoArray(dubins_info,ObsSeries,Property);       % Store path info and obstacle info into an array
     TrajInfo(1,25)=obs_index;                                       % Supplement obstacle number
     TrajSeq_new(i,:)=TrajInfo(1,:);                                 % Store the current path segment info into path sequence matrix
 

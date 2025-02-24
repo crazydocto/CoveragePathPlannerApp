@@ -20,7 +20,7 @@
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
 
-function Plot_Traj_Coop(Coop_State,ObsInfo,Property,flag,demo)
+function plotTrajCoop(Coop_State,ObsInfo,Property,flag,demo)
     %% 初始化信息 
     [~,n]=size(Coop_State);
     scale=Property.scale;                                               % 设置绘图比例
@@ -46,7 +46,7 @@ function Plot_Traj_Coop(Coop_State,ObsInfo,Property,flag,demo)
         if flag==1                                                      % 绘制备选路径
             [~,m]=size(Coop_State(i).TrajSeqCell);                      % 获取TrajSeqCell中的路径数量
             for j=1:m                                                   % 遍历每条路径
-                [Traj_x,Traj_y]=Traj_Discrete...                        % 获取离散化的航点序列
+                [Traj_x,Traj_y]=trajDiscrete...                        % 获取离散化的航点序列
                     (Coop_State(i).TrajSeqCell{j},Property);
                 hold on;
                 l2=plot(Traj_x*scale,Traj_y*scale,'b');                 % 绘制备选路径
@@ -66,7 +66,7 @@ function Plot_Traj_Coop(Coop_State,ObsInfo,Property,flag,demo)
     pt.MarkerEdgeColor='k';
 
     for i=1:n                                                           % 绘制每个UAV的协作路径
-        [Traj_x,Traj_y]=Traj_Discrete...
+        [Traj_x,Traj_y]=trajDiscrete...
             (Coop_State(i).TrajSeq_Coop,Property);                      % 获取离散航点序列
         hold on;
         l1=plot(Traj_x*scale,Traj_y*scale,'k');                         % 绘制协作路径
@@ -79,7 +79,7 @@ function Plot_Traj_Coop(Coop_State,ObsInfo,Property,flag,demo)
     all_y = NaN(max_points, length(Coop_State));
 
     for i = 1:length(Coop_State)
-        [Traj_x, Traj_y] = Traj_Discrete(Coop_State(i).TrajSeq_Coop, Property);
+        [Traj_x, Traj_y] = trajDiscrete(Coop_State(i).TrajSeq_Coop, Property);
         all_x(1:length(Traj_x), i) = Traj_x;
         all_y(1:length(Traj_y), i) = Traj_y;
     end

@@ -21,7 +21,7 @@
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
 
-function [threat_min,length_min,index] = Dubins_Selection_Threat...
+function [threat_min,length_min,index] = dubinsSelectionThreat...
     (TrajCollect,ObsInfo,threat_min,length_min,index,i)
 
 xc=TrajCollect(i,7);
