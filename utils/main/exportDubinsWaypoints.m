@@ -1,4 +1,4 @@
-%% exportlocal - 局部路径规划数据导出工具
+%% exportDubinsWaypoints - 局部路径规划数据导出工具
 %
 % 功能描述：
 %   将局部路径规划数据从CSV文件中读取并导出到用户指定位置。通过图形界面
@@ -40,7 +40,7 @@
 % 调用示例：
 %   % 在APP中调用
 %   app = AUVCoveragePathPlannerApp;
-%   exportlocal(app);
+%   exportDubinsWaypoints(app);
 %
 % 依赖函数：
 %   - readmatrix
@@ -50,8 +50,7 @@
 % 参见函数：
 %   importlocal, processData
 
-% 函数实现部分
-function exportlocal(app)
+function exportDubinsWaypoints(app)
     try
         % 从工作区读取数据
         result_no_duplicates = evalin('base', 'result_no_duplicates');
