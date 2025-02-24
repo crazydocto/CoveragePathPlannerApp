@@ -44,7 +44,7 @@
 %   - MATLAB 绘图工具箱
 %
 % 参见函数：
-%   planAUVPaths, obstacleMarking, exportDubinsWaypoints, sendDubinsTCPData, 
+%   planAUVPaths, obstacleMarking, exportlocal, sendDubinsTCPData, 
 %   importMapData, generatePath, exportWaypoints, sendTCPData
 
 
@@ -117,7 +117,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
         PlanPathsButton          matlab.ui.control.Button
 %         drawPathsButton             matlab.ui.control.Button
         obstacleMarkingButton             matlab.ui.control.Button
-        exportDubinsWaypointsButton          matlab.ui.control.Button
+        ExportLocalButton          matlab.ui.control.Button
         SendLocalTCPButton       matlab.ui.control.Button
         ImportButton       matlab.ui.control.Button
     end
@@ -354,7 +354,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             
             % 添加一个按钮来导出局部路径规划
             app.GenerateButton = uibutton(app.UIFigure, 'push');
-            app.GenerateButton.ButtonPushedFcn = @(~,~) exportDubinsWaypoints(app);
+            app.GenerateButton.ButtonPushedFcn = @(~,~) exportlocal(app);
             app.GenerateButton.Position = [440 420 320 30];
             app.GenerateButton.Text = '导出 Dubins 路径点(csv格式)';
             app.GenerateButton.Enable = 'off';
@@ -373,10 +373,10 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.ImportButton.Text = '导入地图数据';
             
             % 4. 按钮组和状态标签
-            app.exportDubinsWaypointsButton = uibutton(app.UIFigure, 'push');
-            app.exportDubinsWaypointsButton.ButtonPushedFcn = @(~,~) generatePath(app);
-            app.exportDubinsWaypointsButton.Position = [30 150 320 30];
-            app.exportDubinsWaypointsButton.Text = '生成梳状路径';
+            app.ExportLocalButton = uibutton(app.UIFigure, 'push');
+            app.ExportLocalButton.ButtonPushedFcn = @(~,~) generatePath(app);
+            app.ExportLocalButton.Position = [30 150 320 30];
+            app.ExportLocalButton.Text = '生成梳状路径';
             
             app.ExportButton = uibutton(app.UIFigure, 'push');
             app.ExportButton.ButtonPushedFcn = @(~,~) exportWaypoints(app);
