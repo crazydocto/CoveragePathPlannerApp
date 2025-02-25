@@ -74,7 +74,7 @@ function generatePath(app)
         axis(app.UIAxes1, 'equal');
         hold(app.UIAxes1, 'off');
         
-        % 启用导出按钮和TCP发送按钮
+        % 启用相关按钮
         app.ExportButton.Enable = 'on';
         app.SendTCPButton.Enable = 'on';
         app.PlanPathsButton.Enable = 'on';

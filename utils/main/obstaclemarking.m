@@ -151,13 +151,10 @@ function obstacleMarking(app)
         circlesInfo(i, :) = [centers(i, 1), centers(i, 2), radii(i)];
     end
 
-    % 获取当前文件所在位置的工程根目录（向上两级目录示例）
-    projectRoot = fileparts(fileparts(fileparts(mfilename('fullpath'))));
     % 数据存储路径
-    dataDir = fullfile(projectRoot, 'data');
+    dataDir =  fullfile(app.currentFolderPath, 'data');
     % 定义要保存的数据文件名
     filename = fullfile(dataDir, 'circlesInformation.mat');
-
     % 使用 save 函数保存数据到 .mat 文件
     save(filename, 'circlesInfo');
     disp(['圆的信息已保存至文件: ', filename]);

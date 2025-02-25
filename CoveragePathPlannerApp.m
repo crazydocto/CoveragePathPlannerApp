@@ -115,15 +115,14 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
         dubinsradiusEditField       matlab.ui.control.NumericEditField
         
         PlanPathsButton          matlab.ui.control.Button
-%         drawPathsButton             matlab.ui.control.Button
-        obstacleMarkingButton             matlab.ui.control.Button
-        ExportLocalButton          matlab.ui.control.Button
+        obstacleMarkingButton     matlab.ui.control.Button
+        ExportLocalButton        matlab.ui.control.Button
         SendLocalTCPButton       matlab.ui.control.Button
         ImportButton       matlab.ui.control.Button
     end
     
     properties (SetAccess = immutable, GetAccess = public)
-        currentFolderPath string    % 将属性移到这个新的属性块中
+        currentFolderPath string    
     end
 
     methods (Access = private)
@@ -323,8 +322,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.dubinsnfLabel.Text = '后段路径点个数(圆弧):';
             
             app.dubinsnfEditField = uieditfield(app.dubinsPanel, 'numeric');
-            app.dubinsnfEditField.Position = [165 40 110 22];
-            app.dubinsnfEditField.Value = 1;
+            app.dubinsnfEditField.Position = [165 40 110 22];            app.dubinsnfEditField.Value = 1;
             app.dubinsnfEditField.HorizontalAlignment = 'center';
             
             app.dubinsradiusLabel = uilabel(app.dubinsPanel);
