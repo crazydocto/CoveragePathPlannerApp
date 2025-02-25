@@ -338,18 +338,18 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.ExportLocalButton = uibutton(app.UIFigure, 'push');
             app.ExportLocalButton.ButtonPushedFcn = @(~,~) generatePath(app);
             app.ExportLocalButton.Position = [400 770 320 30];
-            app.ExportLocalButton.Text = '生成梳状路径';
+            app.ExportLocalButton.Text = '生成全局梳状路径';
             
             app.ExportButton = uibutton(app.UIFigure, 'push');
             app.ExportButton.ButtonPushedFcn = @(~,~) exportWaypoints(app);
             app.ExportButton.Position = [400 730 320 30];
-            app.ExportButton.Text = '导出梳状路径点(csv格式)';
+            app.ExportButton.Text = '导出全局梳状路径数据(csv)';
             app.ExportButton.Enable = 'off';
             
             app.SendTCPButton = uibutton(app.UIFigure, 'push');
             app.SendTCPButton.ButtonPushedFcn = @(~,~) sendTCPData(app);
             app.SendTCPButton.Position = [400 690 320 30];
-            app.SendTCPButton.Text = '发送梳状路径数据至AUV';
+            app.SendTCPButton.Text = '发送全局梳状路径数据至 AUV ';
             app.SendTCPButton.Enable = 'off';
 
             % 导入.mat的地图数据按钮
@@ -369,21 +369,21 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.PlanPathsButton = uibutton(app.UIFigure, 'push');
             app.PlanPathsButton.ButtonPushedFcn = @(~,~) planAUVPaths(app, app.NumLinesEditField.Value,app.dubinsnsEditField.Value,app.dubinsnlEditField.Value,app.dubinsnfEditField.Value);
             app.PlanPathsButton.Position = [400 570 320 30];
-            app.PlanPathsButton.Text = 'Dubins 路径规划';
+            app.PlanPathsButton.Text = '生成局部 Dubins 路径规划';
             app.PlanPathsButton.Enable = 'off';
 
             % 导出 Dubins 路径点按钮来
             app.GenerateButton = uibutton(app.UIFigure, 'push');
             app.GenerateButton.ButtonPushedFcn = @(~,~) exportlocal(app);
             app.GenerateButton.Position = [400 530 320 30];
-            app.GenerateButton.Text = '导出 Dubins 路径点(csv格式)';
+            app.GenerateButton.Text = '导出 Dubins 路径规划数据(csv)';
             app.GenerateButton.Enable = 'off';
             
             % 发送 Dubins 路径数据至AUV按钮
             app.SendLocalTCPButton = uibutton(app.UIFigure, 'push');
             app.SendLocalTCPButton.ButtonPushedFcn = @(~,~) sendDubinsTCPData(app);
             app.SendLocalTCPButton.Position = [400 490 320 30];
-            app.SendLocalTCPButton.Text = '发送 Dubins 路径数据至AUV';
+            app.SendLocalTCPButton.Text = '发送 Dubins 路径规划数据至 AUV ';
             app.SendLocalTCPButton.Enable = 'off';
             
             %% 6. 状态标签
