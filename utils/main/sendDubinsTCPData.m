@@ -1,27 +1,30 @@
-%% sendDubinsTCPData - 发送局部路径规划数据到AUV
+% 发送局部路径规划数据到AUV
 %
 % 功能描述：
 %   根据设置的服务器IP和端口，将局部路径规划数据发送到AUV设备。
 %
 % 输入参数：
-%   app - AUVCoveragePathPlannerApp的实例
+%   app - AUVCoveragePathPlannerApp实例
+%
+% 输出参数：
+%   无直接返回值，发送结果通过UI界面显示
+%
+% 注意事项：
+%   1. 请确保服务器IP和端口设置正确，且AUV设备已连接。
+%   2. 发送过程中，按钮将被禁用，发送完成后恢复可用状态。
+%   3. 本函数读取本地CSV文件，文件名固定为'result_no_duplicates.csv'。
 %
 % 版本信息：
 %   当前版本：v1.1
-%   创建日期：241101
-%   最后修改：250110
+%   创建日期：20241101
+%   最后修改：20241101
 %
 % 作者信息：
-%   作者：Chihong（游子昂）
-%   邮箱：you.ziang@hrbeu.edu.cn
-%   作者：Chihong（游子昂）
-%   邮箱：you.ziang@hrbeu.edu.cn
 %   作者：董星犴
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
 
 function sendDubinsTCPData(app)
-
     % 获取TCP设置
     serverIP = app.ServerIPEditField.Value;
     port = app.PortEditField.Value;
@@ -58,26 +61,86 @@ function sendDubinsTCPData(app)
         return;
     end
 
+    % 获取工作区中的路径数据
+    try
+        result_no_duplicates = evalin('base', 'result_no_duplicates');
+    catch
+        app.TotalLengthLabelandTCP.Text = '获取result_no_duplicates路径数据失败';
+        app.TotalLengthLabelandTCP.FontColor = [0.8 0 0];
+        app.SendTCPButton.Enable = true;
+        return;
+    end
+
     % 获取初始位置和姿态角
     try
+        %获取卡舵序号和卡舵状态
+        Kdelta=[app.Kdelta1EditField.Value,app.Kdelta2EditField.Value,app.Kdelta3EditField.Value,app.Kdelta4EditField.Value];
+        Delta=[app.Delta1EditField.Value,app.Delta2EditField.Value,app.Delta3EditField.Value,app.Delta4EditField.Value];
+        %获取期望速度，掉深时间和急停时间
+        ud=app.udEditField.Value;
+        Td=app.TdEditField.Value;
+        Tj=app.TjEditField.Value;
+        % 获取初始位置和姿态角
         P0 = [app.P0XEditField.Value, app.P0YEditField.Value, app.P0ZEditField.Value];
         A0 = [app.A0XEditField.Value, app.A0YEditField.Value, app.A0ZEditField.Value];
-        
-        % 获取Waypoints和添加Z坐标列
+
+        % 获取路径点数量和处理Z坐标
         WPNum = size(result_no_duplicates, 1);
-        zero_column = zeros(WPNum, 1);
-        result_no_duplicates = [result_no_duplicates, zero_column];
-        
+        numColumns = size(result_no_duplicates, 2);
+
+        % 根据列数进行不同的操作
+        if numColumns == 4
+            result_no_duplicates(:, 3:4) = [];
+            column_of_z = app.ZEditField.Value * ones(size(result_no_duplicates, 1), 1);
+            result_no_duplicates = [result_no_duplicates, column_of_z];
+        elseif numColumns == 2
+            column_of_z = app.ZEditField.Value * ones(size(result_no_duplicates, 1), 1);
+            result_no_duplicates = [result_no_duplicates, column_of_z];
+        else
+            error('路径数据的列数必须是2或4');
+        end
+
+        result_no_duplicates(app.upEditField.Value,3)=app.DupEditField.Value;
+        result_no_duplicates(app.downEditField.Value,3)=app.DdownEditField.Value;
+        up=app.upEditField.Value;
+        down=app.downEditField.Value;
+        z=app.ZEditField.Value;
+        hostIP=app.hostIPEditField.Value;
+        hPort=app.hPortEditField.Value;
+
+        % 保持原有的assignin语句
+        assignin('base','z',z);
+        assignin('base',"Waypoints",result_no_duplicates);
+        assignin('base','WPNum',WPNum);
+        assignin('base','P0',P0);
+        assignin('base','A0',A0);
+        assignin('base','Kdelta',Kdelta);
+        assignin('base','Delta',Delta);
+        assignin('base','ud',ud);
+        assignin('base',"Td",Td);
+        assignin('base',"Tj",Tj);
+        assignin('base','up',up);
+        assignin('base',"down",down);
+
         % 创建数据结构
         dataStruct = struct('Waypoints', result_no_duplicates, ...
-                            'WPNum', WPNum, ...
-                            'P0', P0, ...
-                            'A0', A0);
-        
+            'WPNum', WPNum, ...
+            'P0', P0, ...
+            'A0', A0, ...
+            'Kdelta',Kdelta, ...
+            'Delta',Delta, ...
+            'ud',ud, ...
+            'Td',Td, ...
+            'Tj',Tj, ...
+            'up',up, ...
+            'down',down, ...
+            'z',z, ...
+            'hostIP',hostIP, ...
+            'hPort',hPort);
         % 转换为JSON
         jsonData = jsonencode(dataStruct);
     catch dataErr
-        app.TotalLengthLabelandTCP.Text = ['数据准备失败: %s', dataErr.message];   
+        app.TotalLengthLabelandTCP.Text = ['数据准备失败: ', dataErr.message];   
         app.TotalLengthLabelandTCP.FontColor = [0.8 0 0];
         app.SendTCPButton.Enable = true;
         return;
@@ -97,4 +160,5 @@ function sendDubinsTCPData(app)
         return;
     end
     app.SendTCPButton.Enable = true;
+    
 end

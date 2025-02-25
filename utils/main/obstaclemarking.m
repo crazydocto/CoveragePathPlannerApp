@@ -158,8 +158,8 @@ function obstacleMarking(app)
 
     % 使用 save 函数保存数据到 .mat 文件
     save(filename, 'circlesInfo');
-    disp(['圆的信息已保存至文件: ', filename]);
+    disp('圆的信息已保存');
 
-    app.PlanPathsButton.Enable = 'on';  ... 之后需要:解耦地形图障碍物与Dubins路径规划
+    app.PlanPathsButton.Enable = 'on';  
 
 end

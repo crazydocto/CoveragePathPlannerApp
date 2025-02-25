@@ -16,19 +16,17 @@
 %   最后修改：250110
 %
 % 作者信息：
-%   作者：Chihong（游子昂）
-%   邮箱：you.ziang@hrbeu.edu.cn
 %   作者：董星犴
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
 
-function dubins_info = dubinsGenerate(dubins_info,type)
+function dubins_info = Dubins_Generate(dubins_info,type)
 %% Initialize Dubins path information
 dubins_info.traj.type=type;                                 % Set path type 
 dubins_info.traj.erro=0;                                    % Reset error marker
 
 %% Calculation parameters of the Dubins path
-% Please refer to Eq.(1) and Table 1 in Paper "Multi-AUV Cooperative Path-planning Under Complex Threat Environment" for details
+% Please refer to Eq.(1) and Table 1 in Paper "Multi-UAV Cooperative Path-planning Under Complex Threat Environment" for details
 circle_centre_start_param = [-1, 1,-1, 1];
 circle_centre_finish_param =[-1, 1, 1,-1];
 exit_point_angle_param_1 =  [-1, 1, 1,-1];

@@ -1,58 +1,32 @@
-%% exportDubinsWaypoints - 局部路径规划数据导出工具
+% 导出局部路径规划数据
 %
 % 功能描述：
-%   将局部路径规划数据从CSV文件中读取并导出到用户指定位置。通过图形界面
-%   交互，支持用户自定义导出文件名和路径。
+%   此函数用于将局部路径规划数据从CSV文件中读取并导出到用户指定的CSV文件中。
+%   用户通过文件选择对话框选择保存路径和文件名。
+%
+% 输入参数：
+%   app - AUVCoveragePathPlannerApp的实例
+%
+% 输出参数：
+%   无直接输出，结果通过UI界面显示
+%
+% 注意事项：
+%   1. 确保CSV文件存在且格式正确。
+%   2. 该函数会更新UI界面中的状态标签。
+%
+% 版本信息：
+%   版本：v1.1
+%   创建日期：241101
+%   最后修改：250110
 %
 % 作者信息：
-%   作者：Chihong（游子昂）
-%   邮箱：you.ziang@hrbeu.edu.cn
-%   作者：Chihong（游子昂）
-%   邮箱：you.ziang@hrbeu.edu.cn
 %   作者：董星犴
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
-%
-% 版本信息：
-%   当前版本：v1.1
-%   创建日期：241115
-%   最后修改：250110
-%
-% 版本历史：
-%   v1.1 (250110)
-%       + 优化错误处理机制
-%       + 改进用户界面交互
-%   v1.0 (241115)
-%       + 首次发布
-%       + 实现基础CSV文件导出功能
-%       + 添加用户交互界面
-%
-% 输入参数：
-%   app - [object] AUVCoveragePathPlannerApp的实例
-%         必选参数，包含应用程序的UI组件和数据
-%
-% 输出参数：
-%   无直接返回值，结果通过文件导出和UI提示反馈
-%
-% 注意事项：
-%   1. 数据源：确保'result_no_duplicates.csv'文件存在且格式正确
-%   2. 权限要求：需要目标文件夹的写入权限
-%   3. 数据格式：输出为CSV格式，保持原始数据结构
-%
-% 调用示例：
-%   % 在APP中调用
-%   app = AUVCoveragePathPlannerApp;
-%   exportDubinsWaypoints(app);
-%
-% 依赖函数：
-%   - readmatrix
-%   - writetable
-%   - array2table
-%
-% 参见函数：
-%   importlocal, processData
+
 
 function exportDubinsWaypoints(app)
+
     try
         % 从工作区读取数据
         result_no_duplicates = evalin('base', 'result_no_duplicates');
@@ -91,10 +65,13 @@ function exportDubinsWaypoints(app)
         writetable(resultTable, fullPath);
         app.StatusLabel.Text = '数据导出成功！';
         app.StatusLabel.FontColor = [0 0.5 0];
+
         
     catch ME
         app.StatusLabel.Text = ['导出失败: ' ME.message];
         app.StatusLabel.FontColor = [0.8 0 0];
         errordlg(['导出失败: ' ME.message], '导出错误');
     end
+
+
 end

@@ -1,66 +1,34 @@
-%% generateCombPath - AUV梳状覆盖路径生成工具
-%
-% 功能描述：
-%   基于给定参数生成AUV的梳状覆盖路径，支持X方向和Y方向的路径生成，
-%   并计算总路径长度。适用于区域覆盖任务的路径规划。
-%
-% 作者信息：
-%   作者：Chihong（游子昂）
-%   邮箱：you.ziang@hrbeu.edu.cn
-%   单位：哈尔滨工程大学
-%
-% 版本信息：
-%   当前版本：v1.1
-%   创建日期：241101
-%   最后修改：250110
-%
-% 版本历史：
-%   v1.1 (250110)
-%       + 添加转弯半径参数
-%       + 优化路径生成算法
-%       + 改进状态显示
-%   v1.0 (241101)
-%       + 首次发布
-%       + 实现基础梳状路径生成
-%       + 支持双向路径规划
-%
-% 输入参数：
-%   app          - [object] AUVCoveragePathPlannerApp实例
-%                  必选参数，包含UI组件和数据
-%   startPoint   - [1x2 double] 起始点坐标 [x, y]
-%                  必选参数，定义路径起点
-%   lineSpacing  - [double] 梳状齿间距（米）
-%                  必选参数，>0
-%   pathWidth    - [double] 路径宽度（米）
-%                  必选参数，>0
-%   numLines     - [integer] 梳状路径数量
-%                  必选参数，>0
-%   direction    - [char] 路径方向
-%                  必选参数，'x'或'y'
-%   radius       - [double] 转弯半径（米）
-%                  必选参数，>0
-%
-% 输出参数：
-%   waypoints    - [nx4 double] 路径点数组
-%                  [x, y, heading, radius]
-%
-% 注意事项：
-%   1. 输入验证：所有数值参数必须为正数
-%   2. 内存消耗：与路径点数量成正比
-%   3. 性能考虑：路径点数量会影响计算时间
-%
-% 调用示例：
-%   % 生成X方向梳状路径
-%   waypoints = generateCombPath(app, [0,0], 10, 100, 5, 'x', 5);
-%
-%   % 生成Y方向梳状路径
-%   waypoints = generateCombPath(app, [0,0], 10, 100, 5, 'y', 5);
-%
-% 依赖函数：
-%   - norm
-%
-% 参见函数：
-%   plotPath, calculateTotalLength
+    % 生成梳状路径
+    %
+    % 功能描述：
+    %   此函数用于生成AUV的梳状覆盖路径。根据给定的起始点、线间距、路径宽度、线条数量、方向和转弯半径，
+    %   生成路径点并计算总路径长度。
+    %
+    % 输入参数：
+    %   app - AUVCoveragePathPlannerApp的实例
+    %   start_point - 起始点坐标 [x, y]
+    %   line_spacing - 梳状齿间距
+    %   path_width - 路径宽度
+    %   num_lines - 梳状路径数量
+    %   direction - 路径方向 ('x' 或 'y')
+    %   radius - 转弯半径
+    %
+    % 输出参数：
+    %   waypoints - 生成的路径点数组
+    %
+    % 注意事项：
+    %   1. 确保所有输入参数有效且格式正确。
+    %   2. 该函数会更新UI界面中的标签。
+    %
+    % 版本信息：
+    %   版本：v1.1
+    %   创建日期：241101
+    %   最后修改：250110
+    %
+    % 作者信息：
+    %   作者：游子昂
+    %   邮箱：you.ziang@hrbeu.edu.cn
+    %   单位：哈尔滨工程大学
 
 function waypoints = generateCombPath(app, startPoint, lineSpacing, pathWidth, numLines, direction,radius)
     % 初始化waypoints数组

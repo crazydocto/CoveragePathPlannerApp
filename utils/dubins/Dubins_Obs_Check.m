@@ -17,19 +17,17 @@
 %   最后修改：250110
 %
 % 作者信息：
-%   作者：Chihong（游子昂）
-%   邮箱：you.ziang@hrbeu.edu.cn
 %   作者：董星犴
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
 
-function Obs_Series = dubinsObsCheck(dubins_info, ObsInfo, Property)
+function Obs_Series = Dubins_Obs_Check(dubins_info, ObsInfo, Property)
 %% Initialize information
 [obs_num,~]=size(ObsInfo);                                      % Obtain the number of obstacles
 ns=Property.ns;                                                 % Number of discrete points on the starting arc
 nl=Property.nl;                                                 % Number of discrete points on the straight line
 nf=Property.nf;                                                 % Number of discrete points on the ending arc
-[dubins_x,dubins_y]=dubinsDiscret(dubins_info,ns,nl,nf);       % Generate waypoints
+[dubins_x,dubins_y]=Dubins_Discret(dubins_info,ns,nl,nf);       % Generate waypoints
 [~,pt_num]=size(dubins_x);                                      % Obtain the number of waypoints
 Obs_Temp=zeros(1,Property.max_obs_num);                         % Initialize temporary obstacle number sequence
 Obs_Series=zeros(1,Property.max_obs_num);                       % Initialize obstacle number sequence

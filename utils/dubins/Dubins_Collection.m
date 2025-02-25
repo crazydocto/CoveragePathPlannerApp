@@ -18,22 +18,20 @@
 %   最后修改：250110
 %
 % 作者信息：
-%   作者：Chihong（游子昂）
-%   邮箱：you.ziang@hrbeu.edu.cn
 %   作者：董星犴
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
 
-function TrajCollect = dubinsCollection(dubins_info,ObsInfo,obs_index,Property)
+function TrajCollect = Dubins_Collection(dubins_info,ObsInfo,obs_index,Property)
 TrajCollect=zeros(4,Property.Info_length);                          % Initialize the matrix of all type paths information
 for type=1:4                                                        % Traverse each type of Dubins path
-    dubins_info=dubinsGenerate(dubins_info,type);                  % Generate complete path information based on basic path information and path type
+    dubins_info=Dubins_Generate(dubins_info,type);                  % Generate complete path information based on basic path information and path type
     if dubins_info.traj.length~=0                                   % If the generated trajectory length is not 0,it indicates the existence of a trajectory
-        ObsSeries=dubinsObsCheck(dubins_info,ObsInfo,Property);   % Perform obstacle detection on the current path
+        ObsSeries=Dubins_Obs_Check(dubins_info,ObsInfo,Property);   % Perform obstacle detection on the current path
     else
         continue;
     end
-    TrajInfo=trajInfoArray(dubins_info,ObsSeries,Property);       % Record the Dubins path information and obstacle information on the path into an array
+    TrajInfo=Traj_Info_Array(dubins_info,ObsSeries,Property);       % Record the Dubins path information and obstacle information on the path into an array
     TrajInfo(1,25)=obs_index;                                       % Record the number of the current obstacle to be avoided
     TrajCollect(type,:)=TrajInfo(1,:);                              % Store all types of path information
 end

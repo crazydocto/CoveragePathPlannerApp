@@ -1,4 +1,4 @@
-%% trajSeqGenerate - 生成完整路径序列
+%% TrajSeqGenerate - 生成完整路径序列
 %
 % 功能描述：
 %   根据每个路径规划步骤的结果生成完整的路径序列。
@@ -15,13 +15,11 @@
 %   最后修改：250110
 %
 % 作者信息：
-%   作者：Chihong（游子昂）
-%   邮箱：you.ziang@hrbeu.edu.cn
 %   作者：董星犴
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
 
-function TrajSeqCell = trajSeqGenerate(TrajInfoCell)
+function TrajSeqCell = Traj_Seq_Generate(TrajInfoCell)
 %% Initialize information
 [~,n1]=size(TrajInfoCell);                                              % Obtain the length of path segment information storage cell
 c1=0;                                                                   % Initialize counter 1 and count the number of path planning steps

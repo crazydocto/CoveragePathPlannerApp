@@ -1,10 +1,10 @@
 %% dubinsSelection - 根据特定条件选择路径
 %
 % 功能描述：
-%   从给定的AUV路径信息矩阵中选择符合特定条件的路径。
+%   从给定的UAV路径信息矩阵中选择符合特定条件的路径。
 %
 % 输入参数：
-%   TrajCollect - AUV路径信息矩阵
+%   TrajCollect - UAV路径信息矩阵
 %   ObsInfo     - 障碍物信息矩阵
 %   Property    - 路径规划参数结构体
 %   stage       - 路径规划阶段
@@ -19,14 +19,12 @@
 %   最后修改：250110
 %
 % 作者信息：
-%   作者：Chihong（游子昂）
-%   邮箱：you.ziang@hrbeu.edu.cn
 %   作者：董星犴
 %   邮箱：1443123118@qq.com
 %   单位：哈尔滨工程大学
 
 
-function [index,ObsCur] = dubinsSelection(TrajCollect,ObsInfo,Property,stage)
+function [index,ObsCur] = Dubins_Selection(TrajCollect,ObsInfo,Property,stage)
 
 [n,~]=size(TrajCollect);
 [m,~]=size(ObsInfo);
@@ -51,7 +49,7 @@ switch flag
                 count=count+1;
                 IndexTemp(1,count)=i;
             end
-            %plotTrajSingle(TrajCollect(i,:),ObsInfo,Property)
+            %Plot_Traj_Single(TrajCollect(i,:),ObsInfo,Property)
         end
         if count==0
             index=0;
@@ -101,7 +99,7 @@ switch flag
                     IndexTemp(1,count)=i;
                 end
             end
-            %plotTrajSingle(TrajCollect(i,:),ObsInfo,Property)
+            %Plot_Traj_Single(TrajCollect(i,:),ObsInfo,Property)
         end
         if count==0
             index=0;
@@ -117,7 +115,7 @@ switch flag
             obs_num=TrajCollect(i,26);
             obs_index(1:5)=TrajCollect(i,27:31);
             if obs_num==0&&obs_index(1)==0
-                [length_min,index]=dubinsSelectionLength...
+                [length_min,index]=Dubins_Selection_Length...
                     (TrajCollect,length_min,index,i);
             end
         end
@@ -129,7 +127,7 @@ switch flag
             psi_s=TrajCollect(i,12);
             psi_f=TrajCollect(i,23);
             if abs(psi_s)+abs(psi_f)<3*pi/2
-                [length_min,index]=dubinsSelectionLength...
+                [length_min,index]=Dubins_Selection_Length...
                     (TrajCollect,length_min,index,i);
             end
         end
@@ -138,7 +136,7 @@ switch flag
         index=0;
         length_min=0;
         for i=1:n
-            [length_min,index]=dubinsSelectionLength...
+            [length_min,index]=Dubins_Selection_Length...
                 (TrajCollect,length_min,index,i);
         end
     % Select the path that meets the turning angle constraint and poses the least threat
@@ -150,7 +148,7 @@ switch flag
             psi_s=TrajCollect(i,12);
             psi_f=TrajCollect(i,23);
             if abs(psi_s)+abs(psi_f)<3*pi/2
-                [threat_min,length_min,index]=dubinsSelectionThreat...
+                [threat_min,length_min,index]=Dubins_Selection_Threat...
                     (TrajCollect,ObsInfo,threat_min,length_min,index,i);
             end
         end
@@ -160,7 +158,7 @@ switch flag
         length_min=0;
         threat_min=0;
         for i=1:n
-            [threat_min,length_min,index]=dubinsSelectionThreat...
+            [threat_min,length_min,index]=Dubins_Selection_Threat...
                 (TrajCollect,ObsInfo,threat_min,length_min,index,i);
         end
 

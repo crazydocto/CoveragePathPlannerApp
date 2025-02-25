@@ -1,30 +1,31 @@
-% 发送TCP数据到AUV设备
-%
-% 功能描述：
-%   此函数用于将规划路径数据通过TCP连接发送到AUV设备。
-%   它首先检查TCP设置，尝试建立连接，然后发送数据。
-%
-% 输入参数：
-%   app - AUVCoveragePathPlannerApp的实例，包含UI组件和路径数据
-%
-% 输出参数：
-%   无直接输出，发送结果会在UI界面中显示
-%
-% 注意事项：
-%   1. 确保服务器IP和端口正确，且AUV设备已开启并准备好接收数据。
-%   2. 发送过程中，相关按钮将被禁用，发送完成后恢复可用状态。
-%
-% 版本信息：
-%   版本：v1.1
-%   创建日期：241101
-%   最后修改：250110
-%
-% 作者信息：
-%   作者：游子昂
-%   邮箱：you.ziang@hrbeu.edu.cn
-%   单位：哈尔滨工程大学
-
 function sendTCPData(app)
+    % 发送TCP数据到AUV设备
+    %
+    % 功能描述：
+    %   此函数用于将规划路径数据通过TCP连接发送到AUV设备。
+    %   它首先检查TCP设置，尝试建立连接，然后发送数据。
+    %
+    % 输入参数：
+    %   app - AUVCoveragePathPlannerApp的实例，包含UI组件和路径数据
+    %
+    % 输出参数：
+    %   无直接输出，发送结果会在UI界面中显示
+    %
+    % 注意事项：
+    %   1. 确保服务器IP和端口正确，且AUV设备已开启并准备好接收数据。
+    %   2. 发送过程中，相关按钮将被禁用，发送完成后恢复可用状态。
+    %
+    % 版本信息：
+    %   版本：v1.1
+    %   创建日期：241101
+    %   最后修改：250110
+    %
+    % 作者信息：
+    %   作者：游子昂
+    %   邮箱：you.ziang@hrbeu.edu.cn
+    %   单位：哈尔滨工程大学
+
+    % 获取TCP设置
     % 获取TCP设置
     serverIP = app.ServerIPEditField.Value;
     port = app.PortEditField.Value;
@@ -36,6 +37,16 @@ function sendTCPData(app)
         return;
     end
 
+    % % 创建TCP客户端配置
+    % try
+    %     client = tcpclient(serverIP, port);
+    %     app.TotalLengthLabelandTCP.Text = ('TCP连接成功');
+    %     app.TotalLengthLabelandTCP.FontColor = [0 0.5 0];
+    % catch tcpErr
+    %     app.TotalLengthLabelandTCP.Text = ['TCP连接失败: %s\n请检查IP地址和端口设置', tcpErr.message];
+    %     app.TotalLengthLabelandTCP.FontColor  = [0.8 0 0];
+    %     return;
+    % end 
     % 创建TCP客户端配置
     try
         % 显示连接中状态
@@ -62,20 +73,74 @@ function sendTCPData(app)
     end
 
     try
+        %获取卡舵序号和卡舵状态
+        Kdelta=[app.Kdelta1EditField.Value,app.Kdelta2EditField.Value,app.Kdelta3EditField.Value,app.Kdelta4EditField.Value];
+        Delta=[app.Delta1EditField.Value,app.Delta2EditField.Value,app.Delta3EditField.Value,app.Delta4EditField.Value];
+        %获取期望速度，掉深时间和急停时间
+        ud=app.udEditField.Value;
+        Td=app.TdEditField.Value;
+        Tj=app.TjEditField.Value;
+
         % 获取初始位置和姿态角
         P0 = [app.P0XEditField.Value, app.P0YEditField.Value, app.P0ZEditField.Value];
         A0 = [app.A0XEditField.Value, app.A0YEditField.Value, app.A0ZEditField.Value];
-        
+
         % 获取Waypoints和添加Z坐标列
         WPNum = size(app.Waypoints, 1);
-        zero_column = zeros(WPNum, 1);
-        Waypoints = [app.Waypoints, zero_column];
-        
+
+        % 获取 app.Waypoints 的列数
+        numColumns = size(app.Waypoints, 2);
+
+        % 根据列数进行不同的操作
+        if numColumns == 4
+            % 如果 app.Waypoints 有 4 列，删除第 3 列和第 4 列
+            app.Waypoints(:, 3:4) = [];
+            % 补充一列 5
+            column_of_z = app.ZEditField.Value * ones(size(app.Waypoints, 1), 1);
+            Waypoints = [app.Waypoints, column_of_z];
+        elseif numColumns == 2
+            % 如果 app.Waypoints 有 2 列，补充一列 5
+            column_of_z = app.ZEditField.Value * ones(size(app.Waypoints, 1), 1);
+            Waypoints = [app.Waypoints, column_of_z];
+        else
+            % 如果列数不是 2 或 4，抛出错误或提示
+            error('app.Waypoints 的列数必须是 2 或 4');
+        end
+        up=app.upEditField.Value;
+        down=app.downEditField.Value;
+        Waypoints(app.upEditField.Value,3)=app.DupEditField.Value;
+        Waypoints(app.downEditField.Value,3)=app.DdownEditField.Value;
+        z=app.ZEditField.Value;
+
+        assignin('base','z',z);
+        assignin('base',"Waypoints",Waypoints);
+        assignin('base','WPNum',WPNum);
+        assignin('base','P0',P0);
+        assignin('base','A0',A0);
+        assignin('base','Kdelta',Kdelta);
+        assignin('base','Delta',Delta);
+        assignin('base','ud',ud);
+        assignin('base',"Td",Td);
+        assignin('base',"Tj",Tj);
+        assignin('base','up',up);
+        assignin('base',"down",down);
+
+    
+
+
         % 创建数据结构
         dataStruct = struct('Waypoints', Waypoints, ...
                                 'WPNum', WPNum, ...
                                 'P0', P0, ...
-                                'A0', A0);
+                                'A0', A0, ...
+                                'Kdelta',Kdelta, ...
+                                'Delta',Delta, ...
+                                'ud',ud, ...
+                                'Td',Td, ...
+                                'Tj',Tj ,...
+                                'up',up ,...
+                                'down',down, ...
+                                'z',z);
         
         % 转换为JSON
         jsonData = jsonencode(dataStruct);
