@@ -77,7 +77,7 @@ function generatePath(app)
         % 启用相关按钮
         app.ExportButton.Enable = 'on';
         app.SendTCPButton.Enable = 'on';
-        app.PlanPathsButton.Enable = 'on';
+        % app.PlanPathsButton.Enable = 'on';  ... 解耦地形图障碍物与Dubins路径规划
         
     catch ME
         % 错误处理

@@ -155,8 +155,11 @@ function obstacleMarking(app)
     dataDir =  fullfile(app.currentFolderPath, 'data');
     % 定义要保存的数据文件名
     filename = fullfile(dataDir, 'circlesInformation.mat');
+
     % 使用 save 函数保存数据到 .mat 文件
     save(filename, 'circlesInfo');
     disp(['圆的信息已保存至文件: ', filename]);
+
+    app.PlanPathsButton.Enable = 'on';  ... 之后需要:解耦地形图障碍物与Dubins路径规划
 
 end
