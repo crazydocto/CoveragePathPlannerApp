@@ -100,10 +100,25 @@ function sendDubinsTCPData(app)
             error('路径数据的列数必须是2或4');
         end
 
-        result_no_duplicates(app.upEditField.Value,3)=app.DupEditField.Value;
-        result_no_duplicates(app.downEditField.Value,3)=app.DdownEditField.Value;
         up=app.upEditField.Value;
         down=app.downEditField.Value;
+
+        % 上浮点索引超出总航程
+        if up > WPNum 
+            app.TotalLengthLabelandTCP.Text = '上浮点索引超出总航程';
+            app.TotalLengthLabelandTCP.FontColor = [0.8 0 0];
+        else
+            result_no_duplicates(app.upEditField.Value,3)=app.DupEditField.Value;
+        end
+
+        % 下潜点索引超出总航程
+        if down > WPNum
+            app.TotalLengthLabelandTCP.Text = '下潜点索引超出总航程';
+            app.TotalLengthLabelandTCP.FontColor = [0.8 0 0];
+        else
+            result_no_duplicates(app.downEditField.Value,3)=app.DdownEditField.Value;
+        end
+        
         z=app.ZEditField.Value;
         hostIP=app.hostIPEditField.Value;
         hPort=app.hPortEditField.Value;

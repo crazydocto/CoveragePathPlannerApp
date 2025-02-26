@@ -185,7 +185,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.InitPanel.Position = [30 460 370 350]; % 增加面板高度
 
             % 容错控制卡舵序号设置
-            uilabel(app.InitPanel, 'Text', '设置卡舵序号:', 'Position', [10 310 120 14]);
+            uilabel(app.InitPanel, 'Text', '设置卡舵时间(s):', 'Position', [10 310 120 14]);
 
             % 舵1
             app.Kdelta1Label = uilabel(app.InitPanel);
@@ -228,7 +228,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.Kdelta4EditField.HorizontalAlignment = 'center';
 
             % 容错控制卡舵舵角设置
-            uilabel(app.InitPanel, 'Text', '设置卡舵舵角:', 'Position', [10 250 120 22]);
+            uilabel(app.InitPanel, 'Text', '设置卡舵舵角(°):', 'Position', [10 250 120 22]);
 
             % 舵1
             app.Delta1Label = uilabel(app.InitPanel);
@@ -487,7 +487,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.ServerIPLabel.Text = '服务器IP:'; 
             app.ServerIPEditField = uieditfield(app.TCPPanel);
             app.ServerIPEditField.Position = [65 40 100 22];
-            app.ServerIPEditField.Value = '192.168.1.120';
+            app.ServerIPEditField.Value = '192.168.1.115';
             app.ServerIPEditField.HorizontalAlignment = 'center';
 
             app.PortLabel = uilabel(app.TCPPanel);
@@ -623,7 +623,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             %% 6. 状态标签
             % 总路径长度及TCP状态版本展示
             app.TotalLengthLabelandTCP = uilabel(app.UIFigure);
-            app.TotalLengthLabelandTCP.Position = [30 80 320 40];
+            app.TotalLengthLabelandTCP.Position = [30 70 320 40];
             app.TotalLengthLabelandTCP.Text = '总路径长度: 0.0 米';
             app.TotalLengthLabelandTCP.HorizontalAlignment = 'center';
             

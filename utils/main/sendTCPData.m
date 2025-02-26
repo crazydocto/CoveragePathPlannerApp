@@ -106,10 +106,26 @@ function sendTCPData(app)
             % 如果列数不是 2 或 4，抛出错误或提示
             error('app.Waypoints 的列数必须是 2 或 4');
         end
-        up=app.upEditField.Value;
-        down=app.downEditField.Value;
-        Waypoints(app.upEditField.Value,3)=app.DupEditField.Value;
-        Waypoints(app.downEditField.Value,3)=app.DdownEditField.Value;
+
+        up=app.upEditField.Value; ... 上浮点索引
+        down=app.downEditField.Value; ... 下潜点索引
+        
+        % 上浮点索引超出总航程
+        if up > WPNum 
+            app.TotalLengthLabelandTCP.Text = '上浮点索引超出总航程';
+            app.TotalLengthLabelandTCP.FontColor = [0.8 0 0];
+        else
+            Waypoints(app.upEditField.Value,3)=app.DupEditField.Value;
+        end
+
+        % 下潜点索引超出总航程
+        if down > WPNum
+            app.TotalLengthLabelandTCP.Text = '下潜点索引超出总航程';
+            app.TotalLengthLabelandTCP.FontColor = [0.8 0 0];
+        else
+            Waypoints(app.downEditField.Value,3)=app.DdownEditField.Value;
+        end
+
         z=app.ZEditField.Value;
 
         assignin('base','z',z);
@@ -124,9 +140,6 @@ function sendTCPData(app)
         assignin('base',"Tj",Tj);
         assignin('base','up',up);
         assignin('base',"down",down);
-
-    
-
 
         % 创建数据结构
         dataStruct = struct('Waypoints', Waypoints, ...
