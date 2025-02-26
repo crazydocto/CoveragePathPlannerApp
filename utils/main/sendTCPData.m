@@ -126,6 +126,14 @@ function sendTCPData(app)
             Waypoints(app.downEditField.Value,3)=app.DdownEditField.Value;
         end
 
+        if up > WPNum || down > WPNum
+            app.TotalLengthLabelandTCP.Text = '上浮点/下潜点索引超出总航程';
+            app.TotalLengthLabelandTCP.FontColor = [0.8 0 0];
+        else
+            Waypoints(app.upEditField.Value,3)=app.DupEditField.Value;
+            Waypoints(app.downEditField.Value,3)=app.DdownEditField.Value;
+        end
+
         z=app.ZEditField.Value;
 
         assignin('base','z',z);
