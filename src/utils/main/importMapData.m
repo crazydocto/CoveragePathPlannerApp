@@ -26,7 +26,7 @@
     
 function importMapData(app)
     % 使用应用程序保存的路径
-    defaultPath = fullfile(app.currentFolderPath, 'data');
+    defaultPath = fullfile(app.currentProjectRoot, 'data');
     
     % 如果data文件夹不存在，则创建它
     if ~exist(defaultPath, 'dir')

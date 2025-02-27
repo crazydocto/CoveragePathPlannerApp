@@ -152,7 +152,7 @@ function obstacleMarking(app)
     end
 
     % 数据存储路径
-    dataDir =  fullfile(app.currentFolderPath, 'data');
+    dataDir =  fullfile(app.currentProjectRoot, 'data');
     % 定义要保存的数据文件名
     filename = fullfile(dataDir, 'circlesInformation.mat');
 

@@ -31,8 +31,8 @@ function exportDubinsWaypoints(app)
         % 从工作区读取数据
         result_no_duplicates = evalin('base', 'result_no_duplicates');
         
-        % 设置默认保存路径为 app.currentFolderPath/data
-        defaultPath = fullfile(app.currentFolderPath, 'data');
+        % 设置默认保存路径为 app.currentProjectRoot/data
+        defaultPath = fullfile(app.currentProjectRoot, 'data');
         
         % 如果目录不存在则创建
         if ~exist(defaultPath, 'dir')

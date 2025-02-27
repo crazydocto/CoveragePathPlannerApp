@@ -145,9 +145,6 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
         ExportButton           matlab.ui.control.Button
         Waypoints
         
-        
-        
-        
         %新增dubins路径规划避障算法
         dubinsPanel           matlab.ui.container.Panel
         dubinsnsLabel         matlab.ui.control.Label
@@ -168,7 +165,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
     end
 
     properties (SetAccess = immutable, GetAccess = public)
-        currentFolderPath string    % 将属性移到这个新的属性块中
+        currentProjectRoot string    % 将属性移到这个新的属性块中
     end
 
     methods (Access = private)
@@ -177,7 +174,6 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.UIFigure = uifigure;
             app.UIFigure.Position = [100 100 1300 900]; ...[100 100 1300 830]
             app.UIFigure.Name = 'AUV路径点上位机 (单位:m)';
-
 
             %% 1. 坐标初始化面板
             app.InitPanel = uipanel(app.UIFigure);
@@ -664,7 +660,65 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             grid(app.UIAxes3, 'on');
 
         end
-    
+
+        %% 项目路径设置脚本
+        function [projectRoot,currentDir]= setupAppPaths(app)
+            % 获取当前脚本所在的目录
+            currentDir = fileparts(mfilename('fullpath'));
+            projectRoot = fullfile(currentDir, '..');
+            
+            % 定义需要添加的核心文件夹路径
+            pathsToAdd = {
+                fullfile(currentDir, 'utils'),            ... 工具函数主目录
+                fullfile(currentDir, 'utils', 'dubins'),  ... Dubins路径规划
+                fullfile(currentDir, 'utils', 'main'),    ... 主要功能函数
+                fullfile(currentDir, 'utils', 'plot'),    ... 绘图相关函数
+                fullfile(currentDir, 'utils', 'trajectory'), ... 轨迹生成函数
+                fullfile(projectRoot, 'data'),            ... 数据文件夹
+                fullfile(projectRoot, 'picture')          ... 图片文件夹
+            };
+            
+            % 添加所有文件夹到搜索路径
+            for i = 1:length(pathsToAdd)
+                if exist(pathsToAdd{i}, 'dir')
+                    addpath(pathsToAdd{i});
+                    fprintf('已添加路径: %s\n', pathsToAdd{i});
+                else
+                    warning('文件夹不存在: %s', pathsToAdd{i});
+                    % 创建不存在的文件夹
+                    mkdir(pathsToAdd{i});
+                    addpath(pathsToAdd{i});
+                    fprintf('已创建并添加路径: %s\n', pathsToAdd{i});
+                end
+            end
+            
+            % 验证环境设置
+            app.checkEnvironment();
+            
+            fprintf('路径设置完成！\n');
+        end
+
+        %% 检查必要的工具箱是否安装
+        function checkEnvironment(~)
+            % 检查必要的工具箱是否安装
+            requiredToolboxes = {'MATLAB', 'Simulink'};
+            installedToolboxes = ver;
+            installedToolboxNames = {installedToolboxes.Name};
+            
+            fprintf('\n环境检查:\n');
+            for i = 1:length(requiredToolboxes)
+                if any(contains(installedToolboxNames, requiredToolboxes{i}))
+                    fprintf('✓ %s 已安装\n', requiredToolboxes{i});
+                else
+                    warning('⨯ %s 未安装\n', requiredToolboxes{i});
+                end
+            end
+            
+            % 检查MATLAB版本
+            matlabVersion = version;
+            fprintf('当前MATLAB版本: %s\n', matlabVersion);
+        end
+
         %% 添加启动和关闭时的清理代码
         function startup(app)
             try
@@ -704,12 +758,16 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
     methods (Access = public)
 
         % Construct app
-        function app = CoveragePathPlannerApp
-            % 运行启动脚本设置路径
-            setupAppPaths();
+        function app = CoveragePathPlannerApp()
+
+            % 设置路径
+            [projectRoot,~]=setupAppPaths(app);
             
             % 获取当前文件夹路径
-            app.currentFolderPath = pwd;
+            % app.currentProjectRoot = pwd;
+            % app.currentProjectRoot = fullfile(fileparts(mfilename('fullpath')), '..');
+            % app.currentProjectRoot = fullfile(pwd, '..');
+            app.currentProjectRoot = projectRoot;
             % 注意：删除了以下使用 genpath 和 addpath 修改搜索路径的代码
             
             % 创建组件

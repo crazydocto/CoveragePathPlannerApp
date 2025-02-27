@@ -109,13 +109,15 @@ function X1plotTCP(app)
     assignin('base','up',up);
     assignin('base',"down",down);
     
+    msgbox(sprintf('正在运行仿真系统绘制结果，请稍后...\n'), '正在绘制');
+
     sim('X1PFjicheng')
     
     X = logsout{26}.Values.Data;
     Y = logsout{27}.Values.Data;
     Z = logsout{28}.Values.Data;
     WaypointsPlot = [P0;Waypoints];
-    
+
     figure
     plot3(X,Y,Z,'-b',WaypointsPlot(:,1),WaypointsPlot(:,2),WaypointsPlot(:,3),'--r','LineWidth',1.5);
     hold on;grid on;
@@ -128,6 +130,6 @@ function X1plotTCP(app)
     legend({'Track','Task Path','Start','End','WPs'},'Location','best');legend('boxoff');
     zlabel('Depth[m]');
     set(gca,'ZDir','reverse');
-
+    
 
 end
