@@ -678,17 +678,13 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
                 fullfile(projectRoot, 'picture')          ... 图片文件夹
             };
             
-            % 添加所有文件夹到搜索路径
-            for i = 1:length(pathsToAdd)
-                if exist(pathsToAdd{i}, 'dir')
-                    addpath(pathsToAdd{i});
-                    fprintf('已添加路径: %s\n', pathsToAdd{i});
-                else
-                    warning('文件夹不存在: %s', pathsToAdd{i});
-                    % 创建不存在的文件夹
-                    mkdir(pathsToAdd{i});
-                    addpath(pathsToAdd{i});
-                    fprintf('已创建并添加路径: %s\n', pathsToAdd{i});
+            % 确保文件夹存在，但不添加到搜索路径
+            if ~isdeployed  % 仅在开发环境中执行
+                for i = 1:length(pathsToAdd)
+                    if ~exist(pathsToAdd{i}, 'dir')
+                        mkdir(pathsToAdd{i});
+                        fprintf('已创建文件夹: %s\n', pathsToAdd{i});
+                    end
                 end
             end
             
