@@ -705,13 +705,12 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
 
         % Construct app
         function app = CoveragePathPlannerApp
+            % 运行启动脚本设置路径
+            setupAppPaths();
             
-            % 获取并保存当前文件夹路径
+            % 获取当前文件夹路径
             app.currentFolderPath = pwd;
-            % 使用 genpath 生成当前文件夹及其所有子文件夹的路径
-            allPaths = genpath(app.currentFolderPath);
-            % 使用 addpath 将这些路径添加到 MATLAB 的搜索路径中
-            addpath(allPaths);
+            % 注意：删除了以下使用 genpath 和 addpath 修改搜索路径的代码
             
             % 创建组件
             createComponents(app)
