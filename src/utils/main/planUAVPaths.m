@@ -154,8 +154,6 @@ function planUAVPaths(app,numLines,dubinsns,dubinsnl,dubinsnf)
         plot(app.UIAxes2, x(end), y(end), 'rs', 'MarkerSize', 10, 'LineWidth', 2);
     end
 
-    % 读取障碍物信息
-    load('circlesInformation.mat', 'circlesInfo');
 
     % 绘制障碍物
     for i = 1:size(circlesInfo, 1)
