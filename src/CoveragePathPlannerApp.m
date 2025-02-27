@@ -44,7 +44,7 @@
 %   - MATLAB 绘图工具箱
 %
 % 参见函数：
-%   planAUVPaths, obstacleMarking, exportlocal, sendDubinsTCPData, 
+%   planAUVPaths, obstacleMarking, exportDubinsWaypoints, sendDubinsTCPData, 
 %   importMapData, generatePath, exportWaypoints, sendTCPData
 
 
@@ -116,7 +116,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
         
         PlanPathsButton          matlab.ui.control.Button
         obstacleMarkingButton     matlab.ui.control.Button
-        ExportLocalButton        matlab.ui.control.Button
+        exportDubinsWaypointsButton        matlab.ui.control.Button
         SendLocalTCPButton       matlab.ui.control.Button
         ImportButton       matlab.ui.control.Button
     end
@@ -237,9 +237,9 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.DirectionDropDownLabel.Text = '路径方向:';
             
             app.DirectionDropDown = uidropdown(app.PathParametersPanel);
-            app.DirectionDropDown.Items = {'                    X        ', '                    Y         '};  % 通过添加空格实现视觉居中
-            app.DirectionDropDown.Position = [115 95 175 22];
-            app.DirectionDropDown.Value = '                    Y         ';  % 需要匹配Items中的完整字符串
+            app.DirectionDropDown.Items = {'  X  ', '  Y  '};  % 通过添加空格实现视觉居中
+            app.DirectionDropDown.Position = [115 95 75 22];
+            app.DirectionDropDown.Value = '  Y  ';  % 需要匹配Items中的完整字符串
             
             % 梳状齿间距
             app.LineSpacingEditFieldLabel = uilabel(app.PathParametersPanel);
@@ -254,7 +254,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             % 路径宽度
             app.PathWidthEditFieldLabel = uilabel(app.PathParametersPanel);
             app.PathWidthEditFieldLabel.Position = [35 35 80 22];
-            app.PathWidthEditFieldLabel.Text = '路径宽度:';
+            app.PathWidthEditFieldLabel.Text = '路径总宽:';
             
             app.PathWidthEditField = uieditfield(app.PathParametersPanel, 'numeric');
             app.PathWidthEditField.Position = [115 35 150 22];
@@ -264,7 +264,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             % 梳状路径数量
             app.NumLinesEditFieldLabel = uilabel(app.PathParametersPanel);
             app.NumLinesEditFieldLabel.Position = [35 5 80 22];
-            app.NumLinesEditFieldLabel.Text = '路径数量:';
+            app.NumLinesEditFieldLabel.Text = '路径条数:';
             
             app.NumLinesEditField = uieditfield(app.PathParametersPanel, 'numeric');
             app.NumLinesEditField.Position = [115 5 150 22];
@@ -335,10 +335,10 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.dubinsradiusEditField.HorizontalAlignment = 'center';
             
             %% 5. 按钮组和状态标签
-            app.ExportLocalButton = uibutton(app.UIFigure, 'push');
-            app.ExportLocalButton.ButtonPushedFcn = @(~,~) generatePath(app);
-            app.ExportLocalButton.Position = [400 770 320 30];
-            app.ExportLocalButton.Text = '生成全局梳状路径';
+            app.exportDubinsWaypointsButton = uibutton(app.UIFigure, 'push');
+            app.exportDubinsWaypointsButton.ButtonPushedFcn = @(~,~) generatePath(app);
+            app.exportDubinsWaypointsButton.Position = [400 770 320 30];
+            app.exportDubinsWaypointsButton.Text = '生成全局梳状路径';
             
             app.ExportButton = uibutton(app.UIFigure, 'push');
             app.ExportButton.ButtonPushedFcn = @(~,~) exportWaypoints(app);
@@ -374,7 +374,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
 
             % 导出 Dubins 路径点按钮来
             app.GenerateButton = uibutton(app.UIFigure, 'push');
-            app.GenerateButton.ButtonPushedFcn = @(~,~) exportlocal(app);
+            app.GenerateButton.ButtonPushedFcn = @(~,~) exportDubinsWaypoints(app);
             app.GenerateButton.Position = [400 530 320 30];
             app.GenerateButton.Text = '导出 Dubins 路径规划数据(csv)';
             app.GenerateButton.Enable = 'off';
@@ -424,12 +424,35 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             grid(app.UIAxes3, 'on');
 
         end
-        
+
         %% 项目路径设置脚本
         function [projectRoot,currentDir]= setupAppPaths(app)
             % 获取当前脚本所在的目录
             currentDir = fileparts(mfilename('fullpath'));
-            projectRoot = fullfile(currentDir, '..');
+            
+            % 根据是否已部署设置项目根目录
+            if isdeployed
+                % 在已部署环境中，使用系统临时目录作为基础
+                [status, tempPath] = system('echo %TEMP%');
+                if status == 0
+                    basePath = strtrim(tempPath);
+                    appFolder = fullfile(basePath, 'CoveragePathPlannerApp');
+                    
+                    % 确保应用程序文件夹存在
+                    if ~exist(appFolder, 'dir')
+                        mkdir(appFolder);
+                        fprintf('已创建应用程序文件夹: %s\n', appFolder);
+                    end
+                    projectRoot = appFolder;
+                else
+                    % 如果无法获取系统临时目录，使用当前目录
+                    projectRoot = pwd;
+                    fprintf('无法获取系统临时目录，使用当前目录: %s\n', projectRoot);
+                end
+            else
+                % 开发环境，使用相对路径
+                projectRoot = fullfile(currentDir, '..');
+            end
             
             % 定义需要添加的核心文件夹路径
             pathsToAdd = {
@@ -442,20 +465,46 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
                 fullfile(projectRoot, 'picture')          ... 图片文件夹
             };
             
-            % 确保文件夹存在，但不添加到搜索路径
-            if ~isdeployed  % 仅在开发环境中执行
+            % 确保文件夹存在
+            if isdeployed
+                % 已编译环境，只创建数据和输出文件夹
+                dataPaths = {
+                    fullfile(projectRoot, 'data'),
+                    fullfile(projectRoot, 'picture')
+                };
+                
+                for i = 1:length(dataPaths)
+                    if ~exist(dataPaths{i}, 'dir')
+                        try
+                            mkdir(dataPaths{i});
+                            fprintf('已部署环境: 创建文件夹 %s\n', dataPaths{i});
+                        catch ME
+                            warning('无法创建文件夹 %s: %s', dataPaths{i}, ME.message);
+                        end
+                    end
+                end
+            else
+                % 开发环境，创建所有文件夹并添加到搜索路径
                 for i = 1:length(pathsToAdd)
                     if ~exist(pathsToAdd{i}, 'dir')
-                        mkdir(pathsToAdd{i});
-                        fprintf('已创建文件夹: %s\n', pathsToAdd{i});
+                        try
+                            mkdir(pathsToAdd{i});
+                            fprintf('开发环境: 创建文件夹 %s\n', pathsToAdd{i});
+                        catch ME
+                            warning('无法创建文件夹 %s: %s', pathsToAdd{i}, ME.message);
+                        end
                     end
+                    
+                    % 添加到搜索路径
+                    addpath(pathsToAdd{i});
+                    fprintf('已添加路径: %s\n', pathsToAdd{i});
                 end
             end
             
             % 验证环境设置
             app.checkEnvironment();
             
-            fprintf('路径设置完成！\n');
+            fprintf('路径设置完成！项目根目录: %s\n', projectRoot);
         end
 
         %% 检查必要的工具箱是否安装
