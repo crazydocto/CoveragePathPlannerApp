@@ -45,14 +45,20 @@ function planUAVPaths(app,numLines,dubinsns,dubinsnl,dubinsnf)
         errordlg('工作区中未找到Waypoints变量', '错误');
         return;
     end
-
-    % 加载圆的信息
+    % 从工作区获取circlesInfo变量
     try
-        load('circlesInformation.mat');
+        circlesInfo = evalin('base', 'circlesInfo');
     catch
-        errordlg('无法找到障碍物信息文件 circlesInformation.mat', '错误');
+        errordlg('工作区中未找到circlesInfo变量', '错误');
         return;
     end
+    % % 加载圆的信息
+    % try
+    %     load('circlesInformation.mat');
+    % catch
+    %     errordlg('无法找到障碍物信息文件 circlesInformation.mat', '错误');
+    %     return;
+    % end
 
     % Initialize Data
     Property.obs_last=0;                                                % Record the obstacles avoided during current trajectory planning

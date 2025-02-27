@@ -151,14 +151,17 @@ function obstacleMarking(app)
         circlesInfo(i, :) = [centers(i, 1), centers(i, 2), radii(i)];
     end
 
-    % 数据存储路径
-    dataDir =  fullfile(app.currentProjectRoot, 'data');
-    % 定义要保存的数据文件名
-    filename = fullfile(dataDir, 'circlesInformation.mat');
+    % 将circlesInfo变量保存到工作区，供其他函数直接调用
+    assignin('base', 'circlesInfo', circlesInfo);
 
-    % 使用 save 函数保存数据到 .mat 文件
-    save(filename, 'circlesInfo');
-    disp('圆的信息已保存');
+    % % 数据存储路径
+    % dataDir =  fullfile(app.currentProjectRoot, 'data');
+    % % 定义要保存的数据文件名
+    % filename = fullfile(dataDir, 'circlesInformation.mat');
+
+    % % 使用 save 函数保存数据到 .mat 文件
+    % save(filename, 'circlesInfo');
+    % disp('圆的信息已保存');
 
     app.PlanPathsButton.Enable = 'on';  
 
