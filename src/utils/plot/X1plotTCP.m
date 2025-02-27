@@ -12,15 +12,18 @@
 %
 % 版本信息：
 %   当前版本：v1.0
-%   创建日期：250225
-%   最后修改：250225
+%   创建日期：250110
+%   最后修改：250227
 %
 % 版本历史：
-%   v1.0 (250225) - 首次发布
+%   v1.0 (250110) - 首次发布
 %       + 实现基础的轨迹规划与绘制功能
 %       + 支持CSV路径点导入
 %       + 支持自定义运动参数配置
 %       + 添加三维可视化显示
+%   v1.1 (250227) - 首次发布
+%       + 实现部署后的simulink模型调用
+%       + 优化标签显示和错误处理
 %
 % 输入参数：
 %   app - [object] GUI应用程序对象，包含以下主要属性：
@@ -109,29 +112,79 @@ function X1plotTCP(app)
     assignin('base','up',up);
     assignin('base',"down",down);
     
-    % msgbox(sprintf('正在运行仿真系统绘制结果，请稍后...\n'), '正在绘制');
-    app.StatusLabel.Text = '正在运行仿真系统绘制结果，请稍后... ' ;
-
-    sim('X1PFjicheng')
+    % 使用app.currentProjectRoot设置模型位置
+    if isfield(app, 'currentProjectRoot') && ~isempty(app.currentProjectRoot)
+        modelPath = fullfile(app.currentProjectRoot, 'src', 'utils', 'main', 'X1PFjicheng.slx');
+    else
+        % 如果app没有currentProjectRoot属性，尝试从当前文件位置推断
+        appRootPath = fileparts(fileparts(fileparts(fileparts(mfilename('fullpath')))));
+        modelPath = fullfile(appRootPath, 'src', 'utils', 'main', 'X1PFjicheng.slx');
+    end
     
-    X = logsout{26}.Values.Data;
-    Y = logsout{27}.Values.Data;
-    Z = logsout{28}.Values.Data;
-    WaypointsPlot = [P0;Waypoints];
-
-    figure
-    plot3(X,Y,Z,'-b',WaypointsPlot(:,1),WaypointsPlot(:,2),WaypointsPlot(:,3),'--r','LineWidth',1.5);
-    hold on;grid on;
-    scatter3(X(1),Y(1),Z(1),40,'p','filled','MarkerFaceColor','red');
-    scatter3(X(end),Y(end),Z(end),40,'h','filled','MarkerFaceColor','black');
-    scatter3(WaypointsPlot(:,1),WaypointsPlot(:,2),WaypointsPlot(:,3),40,'o','MarkerEdgeColor','red');
-    %axis equal;
-    %zlim([0 0.6]);
-    set(gca,'DataAspectRatio' ,[1 1 0.06]);
-    legend({'Track','Task Path','Start','End','WPs'},'Location','best');legend('boxoff');
-    zlabel('Depth[m]');
-    set(gca,'ZDir','reverse');
+    % 检查模型文件是否存在
+    if ~exist(modelPath, 'file')
+        % 尝试其他可能的位置
+        alternativePaths = {
+            fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'main', 'X1PFjicheng.slx'),
+            fullfile(fileparts(fileparts(fileparts(fileparts(mfilename('fullpath'))))), 'src', 'X1PFjicheng.slx')
+        };
+        
+        for i = 1:length(alternativePaths)
+            if exist(alternativePaths{i}, 'file')
+                modelPath = alternativePaths{i};
+                break;
+            end
+        end
+        
+        % 如果仍然找不到模型文件
+        if ~exist(modelPath, 'file')
+            app.StatusLabel.Text = '无法找到Simulink模型文件';
+            app.StatusLabel.FontColor = [0.8 0 0];
+            app.SendTCPButton.Enable = true;
+            return;
+        end
+    end
     
-    app.StatusLabel.Text = '绘制成功' ;
+    app.StatusLabel.Text = '正在运行仿真系统，请稍后... ' ;
 
+    % 在加载模型前，先关闭所有打开的同名模型
+    if bdIsLoaded('X1PFjicheng')
+        try
+            close_system('X1PFjicheng', 0); % 尝试关闭模型而不保存
+        catch
+            % 如果模型已修改且无法关闭，可能会抛出异常
+            app.StatusLabel.Text = '无法关闭已打开的模型，请手动关闭后重试';
+            app.StatusLabel.FontColor = [0.8 0 0];
+            app.SendTCPButton.Enable = true;
+            return;
+        end
+    end
+    
+    try
+        % 使用加载的模型路径运行仿真
+        sim(modelPath);
+        app.StatusLabel.Text = '正在绘制结果，请稍后... ' ;
+        
+        X = logsout{26}.Values.Data;
+        Y = logsout{27}.Values.Data;
+        Z = logsout{28}.Values.Data;
+        WaypointsPlot = [P0;Waypoints];
+        
+        figure
+        plot3(X,Y,Z,'-b',WaypointsPlot(:,1),WaypointsPlot(:,2),WaypointsPlot(:,3),'--r','LineWidth',1.5);
+        hold on;grid on;
+        scatter3(X(1),Y(1),Z(1),40,'p','filled','MarkerFaceColor','red');
+        scatter3(X(end),Y(end),Z(end),40,'h','filled','MarkerFaceColor','black');
+        scatter3(WaypointsPlot(:,1),WaypointsPlot(:,2),WaypointsPlot(:,3),40,'o','MarkerEdgeColor','red');
+        set(gca,'DataAspectRatio' ,[1 1 0.06]);
+        legend({'Track','Task Path','Start','End','WPs'},'Location','best');legend('boxoff');
+        zlabel('Depth[m]');
+        set(gca,'ZDir','reverse');
+        
+        app.StatusLabel.Text = '绘制成功' ;
+    catch ME
+        app.StatusLabel.Text = ['仿真出错: ' ME.message];
+        app.StatusLabel.FontColor = [0.8 0 0];
+        app.SendTCPButton.Enable = true;
+    end
 end
