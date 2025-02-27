@@ -52,8 +52,8 @@ function exportWaypoints(app)
             % 创建表格
             T = array2table(app.Waypoints, 'VariableNames', {'X', 'Y','theta','r'});
             
-            % 设置默认保存路径为 app.currentFolderPath/data
-            defaultPath = fullfile(app.currentFolderPath, 'data');
+            % 设置默认保存路径为 app.currentProjectRoot/data
+            defaultPath = fullfile(app.currentProjectRoot, 'data');
             
             % 如果目录不存在则创建
             if ~(exist(defaultPath, 'dir'))

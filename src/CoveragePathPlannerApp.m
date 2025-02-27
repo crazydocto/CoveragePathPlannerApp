@@ -122,7 +122,7 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
     end
     
     properties (SetAccess = immutable, GetAccess = public)
-        currentFolderPath string    
+        currentProjectRoot string    
     end
 
     methods (Access = private)
@@ -424,7 +424,60 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             grid(app.UIAxes3, 'on');
 
         end
-    
+        
+        %% 项目路径设置脚本
+        function [projectRoot,currentDir]= setupAppPaths(app)
+            % 获取当前脚本所在的目录
+            currentDir = fileparts(mfilename('fullpath'));
+            projectRoot = fullfile(currentDir, '..');
+            
+            % 定义需要添加的核心文件夹路径
+            pathsToAdd = {
+                fullfile(currentDir, 'utils'),            ... 工具函数主目录
+                fullfile(currentDir, 'utils', 'dubins'),  ... Dubins路径规划
+                fullfile(currentDir, 'utils', 'main'),    ... 主要功能函数
+                fullfile(currentDir, 'utils', 'plot'),    ... 绘图相关函数
+                fullfile(currentDir, 'utils', 'trajectory'), ... 轨迹生成函数
+                fullfile(projectRoot, 'data'),            ... 数据文件夹
+                fullfile(projectRoot, 'picture')          ... 图片文件夹
+            };
+            
+            % 确保文件夹存在，但不添加到搜索路径
+            if ~isdeployed  % 仅在开发环境中执行
+                for i = 1:length(pathsToAdd)
+                    if ~exist(pathsToAdd{i}, 'dir')
+                        mkdir(pathsToAdd{i});
+                        fprintf('已创建文件夹: %s\n', pathsToAdd{i});
+                    end
+                end
+            end
+            
+            % 验证环境设置
+            app.checkEnvironment();
+            
+            fprintf('路径设置完成！\n');
+        end
+
+        %% 检查必要的工具箱是否安装
+        function checkEnvironment(~)
+            % 检查必要的工具箱是否安装
+            requiredToolboxes = {'MATLAB', 'Simulink'};
+            installedToolboxes = ver;
+            installedToolboxNames = {installedToolboxes.Name};
+            
+            fprintf('\n环境检查:\n');
+            for i = 1:length(requiredToolboxes)
+                if any(contains(installedToolboxNames, requiredToolboxes{i}))
+                    fprintf('✓ %s 已安装\n', requiredToolboxes{i});
+                else
+                    warning('⨯ %s 未安装\n', requiredToolboxes{i});
+                end
+            end
+            
+            % 检查MATLAB版本
+            matlabVersion = version;
+            fprintf('当前MATLAB版本: %s\n', matlabVersion);
+        end
         % 添加启动和关闭时的清理代码
         function startup(app)
             try
@@ -466,12 +519,11 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
         % Construct app
         function app = CoveragePathPlannerApp
             
-            % 获取并保存当前文件夹路径
-            app.currentFolderPath = pwd;
-            % 使用 genpath 生成当前文件夹及其所有子文件夹的路径
-            allPaths = genpath(app.currentFolderPath);
-            % 使用 addpath 将这些路径添加到 MATLAB 的搜索路径中
-            addpath(allPaths);
+            % 设置路径
+            [projectRoot,~]=setupAppPaths(app);
+
+            % 获取当前文件夹路径
+            app.currentProjectRoot = projectRoot;
             
             % 创建组件
             createComponents(app)
