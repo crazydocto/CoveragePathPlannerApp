@@ -109,9 +109,9 @@ function X1plotTCP(app)
     assignin('base','up',up);
     assignin('base',"down",down);
     
-    msgbox(sprintf('正在运行仿真系统绘制结果，请稍后...\n'), '正在绘制');
+    % msgbox(sprintf('正在运行仿真系统绘制结果，请稍后...\n'), '正在绘制');
     app.StatusLabel.Text = '正在运行仿真系统绘制结果，请稍后... ' ;
-    
+
     sim('X1PFjicheng')
     
     X = logsout{26}.Values.Data;
