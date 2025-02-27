@@ -181,6 +181,6 @@ function planUAVPaths(app,numLines,dubinsns,dubinsnl,dubinsnf)
     % 保持图形
     hold(app.UIAxes2, 'off');
 
-    app.X1plotTCPButton.Enable = 'on';
+    % app.X1plotTCPButton.Enable = 'on';
     
 end

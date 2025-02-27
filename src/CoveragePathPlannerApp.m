@@ -609,12 +609,12 @@ classdef CoveragePathPlannerApp < matlab.apps.AppBase
             app.SendLocalTCPButton.Text = '发送 Dubins 路径规划数据至 AUV ';
             app.SendLocalTCPButton.Enable = 'off';
 
-            % 创建仿真图绘制按钮 - 可视化显示当前路径规划及环境的仿真效果
-            app.X1plotTCPButton = uibutton(app.UIFigure, 'push');
-            app.X1plotTCPButton.ButtonPushedFcn = @(~,~) X1plotTCP(app);
-            app.X1plotTCPButton.Position = [440 460 320 30];
-            app.X1plotTCPButton.Text = '绘制 AUV 运行仿真图';
-            app.X1plotTCPButton.Enable = 'off';
+            % % 创建仿真图绘制按钮 - 可视化显示当前路径规划及环境的仿真效果
+            % app.X1plotTCPButton = uibutton(app.UIFigure, 'push');
+            % app.X1plotTCPButton.ButtonPushedFcn = @(~,~) X1plotTCP(app);
+            % app.X1plotTCPButton.Position = [440 460 320 30];
+            % app.X1plotTCPButton.Text = '绘制 AUV 运行仿真图';
+            % app.X1plotTCPButton.Enable = 'off';
 
             %% 6. 状态标签
             % 总路径长度及TCP状态版本展示
